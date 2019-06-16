@@ -2,7 +2,7 @@
 
 ## Blog Links
 
-    [Passthrough egpu on manjaro host](https://xflduke.github.io/pages/passthroughEgpuOnManjaro)
+[Passthrough egpu on manjaro host](https://xflduke.github.io/pages/passthroughEgpuOnManjaro)
 
 ## Support or Contact
 

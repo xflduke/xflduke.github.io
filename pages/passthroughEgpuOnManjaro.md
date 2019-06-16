@@ -50,7 +50,7 @@
 
 - 查看IOMMU分组
 
-  ```shell
+  ```
     #!/bin/bash
     shopt -s nullglob
     for g in /sys/kernel/iommu_groups/*; do
@@ -59,6 +59,7 @@
             echo -e "\t$(lspci -nns ${d##*/})"
         done;
     done;
+  ```
 
 - 记住显卡所在分组，并确保没有其他设备和显卡在同一分组
   如不在同一分组，可能需要打CPU补丁
@@ -83,9 +84,10 @@
     1. `sudo vi /etc/mkinitcpio.conf`
     在文件中的MODULES和HOOKS里面分别添加以下模块
 
-        ```shell
+        ```
         MODULES=(... vfio_pci vfio vfio_iommu_type1 vfio_virqfd ...) 
         HOOKS=(... modconf ...)
+        ```
 
   - 重新生成initramfs
     1. `sudo mkinitcpio -c /etc/mkinitcpio.conf -g /boot/linux-custom.img`
@@ -98,11 +100,12 @@
   
   有类似下面的日志，dmesg日志缓冲区大小有限，建议reboot之后立即确认
 
-  ```shell
+  ```
         [    0.329224] VFIO - User Level meta-driver version: 0.3
         [    0.341372] vfio_pci: add [10de:13c2[ffff:ffff]] class 0x000000/00000000
         [    0.354704] vfio_pci: add [10de:0fbb[ffff:ffff]] class 0x000000/00000000
         [    2.061326] vfio-pci 0000:06:00.0: enabling device (0100 -> 0103)
+  ```
 
 ## 配置libvirt
 
@@ -112,11 +115,12 @@
   `nvram = ["/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"]`
   3. 启动服务
 
-  ```shell
+  ```
   sudo systemctl enable libvirtd.service
   sudo systemctl start libvirtd.service
   sudo systemctl enable virtlogd
   sudo systemctl start virtlogd
+  ```
 
 ## 安装guestOS
 
@@ -132,10 +136,11 @@
    `<vendor_id state='on' value='123456789ab'/>` REM value任意，建议12位
   3. 在`<features>/<hyperv>`的块后面添加
 
-   ```shell
+  ```
     <kvm>
       <hidden state='on'/>
     </kvm>
+  ```
 
 ## 完成图
 ![IMG](images/egpu_passthrough.png)
