@@ -138,4 +138,4 @@
     </kvm>
 
 ## 完成图
-![avatar]()
+![IMG](images/egpu_passthrough.png)
