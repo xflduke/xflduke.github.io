@@ -1,5 +1,17 @@
 # Passthrough egpu on manjaro
 
+* [前言](#前言)
+* [环境准备 Prepare you environment](#环境准备-prepare-you-environment)
+  * [CPU支持intel-VT-d 或者 AMD-d](#cpu支持intel-vt-d-或者-amd-d)
+  * [主板IOMMU支持](#主板支持iommu)
+  * [UEFI支持（非必须）](#uefi支持非必须)
+* [Linux主机屏蔽egpu](#linux主机上屏蔽egpu)
+* [加载模块管理里面屏蔽IOMMUid](#加载模块管理里面屏蔽IOMMUid)
+* [配置libvirt](#配置libvirt)
+* [安装guestOS](#安装guestos)
+* [配置PCI Passthrough](#配置pci-passthrough)
+* [完成图](#完成图)
+
 ## 前言
 
 基于Manjaro linux下的KVM虚拟机的egpu passthrough
@@ -32,7 +44,7 @@
     在结果里面查看下面关键字
      Intel：vmx，AMD：svm
 
-### 主板支持IOMMU
+### 主板IOMM支持
 
 - 设置方法
   - Kernel启动参数里面追加
@@ -69,11 +81,11 @@
 - 设置方法
   - 略
 
-## Linux主机上屏蔽egpu
+## Linux主机屏蔽egpu
 
 因为需要passthrough，主机不能占有egpu，所以需要明确屏蔽掉egpu，实现是stub方式
 
-## 加载模块管理里面添加屏蔽对象id
+## 加载模块管理里面屏蔽IOMMUid
 
 - 设置方法
   - 配置文件
