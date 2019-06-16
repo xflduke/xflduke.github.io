@@ -1,7 +1,5 @@
 # Passthrough egpu on manjaro
 
-[TOC]
-
 ## 前言
 
 基于Manjaro linux下的KVM虚拟机的egpu passthrough
