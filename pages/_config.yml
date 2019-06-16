@@ -1,0 +1,42 @@
+title: Passthrough egpu on manjaro
+description: Just 4 Fun.
+keywords: passthrough egpu arch manjaro linux qemu kvm
+
+#title hide and show
+hide: 
+show: 
+
+baseurl: "" # change this to the subpath of your site, e.g. /blog. Leave it empty if you don't need it.
+url: "xflduke.github.io" # change this to the base hostname & protocol for your site
+bulidtime: "1560692323" #The timestamp at the time of blog establishment can be entered at https://tool.lu/timestamp/to convert the date at the time of blog establishment into a timestamp.
+
+paginate: 8 #同时显示的最大文章数，超过自动分页
+paginate_path: "page:num"
+
+background: https://api.dujin.org/bing/1920.php
+theme_color: 546E7A
+
+google_analytics:
+# hydrogen-blog date format
+# refer to http://shopify.github.io/liquid/filters/date/ if you want to customize this
+hydrogen-blog:
+  date_format: "%b %-d, %Y"
+
+theme: # leave it empty
+
+#install emoji
+plugins:
+  - jemoji
+
+# social
+author: "Link"
+image:
+twitter:
+  username:
+#  site:
+facebook:
+  #publisher: null
+  #profile_id: null
+  app_id: null
+  #authors: null
+#  admins:
