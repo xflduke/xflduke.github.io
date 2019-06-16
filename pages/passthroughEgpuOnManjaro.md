@@ -1,12 +1,12 @@
 # Passthrough egpu on manjaro
 
 * [前言](#前言)
-* [环境准备 Prepare you environment](#环境准备-prepare-you-environment)
+* [环境准备 Prepare your environment](#环境准备-prepare-you-environment)
   * [CPU支持intel-VT-d 或者 AMD-d](#cpu支持intel-vt-d-或者-amd-d)
   * [主板IOMMU支持](#主板支持iommu)
   * [UEFI支持（非必须）](#uefi支持非必须)
 * [Linux主机屏蔽egpu](#linux主机上屏蔽egpu)
-* [加载模块管理里面屏蔽IOMMUid](#加载模块管理里面屏蔽IOMMUid)
+* [加载模块管理里面屏蔽egpu所在组的IOMMUid](#加载模块管理里面屏蔽egpu所在组的IOMMUid)
 * [配置libvirt](#配置libvirt)
 * [安装guestOS](#安装guestos)
 * [配置PCI Passthrough](#配置pci-passthrough)
@@ -44,7 +44,7 @@
     在结果里面查看下面关键字
      Intel：vmx，AMD：svm
 
-### 主板IOMM支持
+### 主板IOMMU支持
 
 - 设置方法
   - Kernel启动参数里面追加
@@ -73,8 +73,8 @@
   done;
   ```
 
-- 记住显卡所在分组，并确保没有其他设备和显卡在同一分组
-  如不在同一分组，可能需要打CPU补丁
+- 记住显卡所在分组，并确保没有其他设备和显卡在同一分组。
+  如不在同一分组，可能需要打内核补丁隔离
 
 ### UEFI支持（非必须）
 
@@ -85,7 +85,7 @@
 
 因为需要passthrough，主机不能占有egpu，所以需要明确屏蔽掉egpu，实现是stub方式
 
-## 加载模块管理里面屏蔽IOMMUid
+## 加载模块管理里面屏蔽egpu所在组的IOMMUid
 
 - 设置方法
   - 配置文件
@@ -109,15 +109,14 @@
 
   - 验证方法
     - `sudo dmesg | grep -i vfio`
-  
-  有类似下面的日志，dmesg日志缓冲区大小有限，建议reboot之后立即确认
+    有类似下面的日志，dmesg日志缓冲区大小有限，建议reboot之后立即确认
 
-  ```bash
-  [    0.329224] VFIO - User Level meta-driver version: 0.3
-  [    0.341372] vfio_pci: add [10de:13c2[ffff:ffff]] class 0x000000/00000000
-  [    0.354704] vfio_pci: add [10de:0fbb[ffff:ffff]] class 0x000000/00000000
-  [    2.061326] vfio-pci 0000:06:00.0: enabling device (0100 -> 0103)
-  ```
+      ```bash
+      [    0.329224] VFIO - User Level meta-driver version: 0.3
+      [    0.341372] vfio_pci: add [10de:13c2[ffff:ffff]] class 0x000000/00000000
+      [    0.354704] vfio_pci: add [10de:0fbb[ffff:ffff]] class 0x000000/00000000
+      [    2.061326] vfio-pci 0000:06:00.0: enabling device (0100 -> 0103)
+      ```
 
 ## 配置libvirt
 
