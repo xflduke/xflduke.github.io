@@ -2,7 +2,7 @@
 
 ##  Links
 
-[Passthrough egpu on manjaro](https://xflduke.github.io/pages/passthroughEgpuOnManjaro)
+[Passthrough egpu on manjaro](https://xflduke.github.io/pages/passthroughPCI/passthroughEgpuOnManjaro)
 
 ## Support or Contact
 
