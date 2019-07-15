@@ -8,7 +8,7 @@
 ## 环境
 
 - L0主机：manjaro
-- L1虚拟机：CentOS 7
+- L1虚拟机：centos7.0
 
 ## 注意事项
 
