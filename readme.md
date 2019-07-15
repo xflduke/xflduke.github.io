@@ -1,6 +1,6 @@
 # Welcome
 
-##  Links
+## Links
 
 [Passthrough egpu on manjaro](https://xflduke.github.io/pages/passthroughPCI/passthroughEgpuOnManjaro)
 [kvm nested virtualization](https://xflduke.github.io/pages/kvmNestVm/kvmNestVm)

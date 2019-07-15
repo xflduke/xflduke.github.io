@@ -17,14 +17,13 @@
 基于Manjaro linux下的KVM虚拟机的egpu passthrough
 
 - 检证环境(具体要求参照下面的环境准备)
-
+- 
   - NUC8iBEH（__i5-8259u__）
   - __egpu__ AORUS Nvida GTX 1080
   - Manjaro Linux（Kernel __4.19.49-1__）
   - qumu 4.0.0-2
   - libvirt 5.4.0-1
   - ovmf 1
-  - 
 - 以下基于上面的检证环境，具体由于BIOS/UEFI,Linux版本不同会有一定差异
   [有不明白的地方多看看Arch Linux Wiki](https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF)
 
@@ -37,6 +36,7 @@
 ### CPU支持intel-VT-d 或者 AMD-d
 
 - 设置方法
+
   - 开机进入BIOS（DEL，F2之类按键的其中一个，具体看主板）
   - 设置VT-x，VT-d（AMD CPU设置AMD-v）  
 - 验证方法
