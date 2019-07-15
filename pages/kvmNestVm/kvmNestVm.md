@@ -1,6 +1,6 @@
-# purpose : run openstack in vm need nested vm ability
+# purpose : kvm nested virtualization
 
-- [purpose : run openstack in vm need nested vm ability](#purpose--run-openstack-in-vm-need-nested-vm-ability)
+- [purpose : kvm nested virtualization](#purpose--kvm-nested-virtualization)
   - [环境](#%E7%8E%AF%E5%A2%83)
   - [注意事项](#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
   - [配置](#%E9%85%8D%E7%BD%AE)
