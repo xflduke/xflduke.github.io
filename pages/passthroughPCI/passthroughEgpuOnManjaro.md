@@ -11,6 +11,7 @@
 * [安装guestOS](#安装guestos)
 * [配置PCI Passthrough](#配置pci-passthrough)
 * [完成图](#完成图)
+* [追记：性能和安定性相关（20190721）](#追记：性能和安定性相关（20190721）)
 
 ## 前言
 
@@ -157,9 +158,9 @@
 
 ![IMG](images/egpu_passthrough.png)
 
-## 追记：性能和安定性相关
+## 追记：性能和安定性相关（20190721）
 
-- CPU绑定（20190721追记）
+- CPU绑定
 
   1. 目的
      1. 缓存重用，减少content switch
