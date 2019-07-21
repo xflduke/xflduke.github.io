@@ -18,7 +18,6 @@
 基于Manjaro linux下的KVM虚拟机的egpu passthrough
 
 - 检证环境(具体要求参照下面的环境准备)
-- 
   - NUC8iBEH（__i5-8259u__）
   - __egpu__ AORUS Nvida GTX 1080
   - Manjaro Linux（Kernel __4.19.49-1__）
@@ -163,12 +162,13 @@
 - CPU绑定
 
   1. 目的
-     1. 缓存重用，减少content switch
+     - 缓存重用，减少content switch
   2. 设定
-     1. 运行中环境设定（非持久化）'sudo virsh vcpupin <domain-id> <vcpu-id> <host-cpu-id>'
-     2. 持久化设定
-        1. ‘sudo virsh edit <domain-id>’
-        2. 加入以下绑定部分（id按照实际环境的cpu数指定）
+
+     - 运行中环境设定（非持久化）'sudo virsh vcpupin <domain-id> <vcpu-id> <host-cpu-id>'
+     - 持久化设定
+        - ‘sudo virsh edit <domain-id>’
+        - 加入以下绑定部分（id按照实际环境的cpu数指定）
         
         ```xml
           <cputune>
