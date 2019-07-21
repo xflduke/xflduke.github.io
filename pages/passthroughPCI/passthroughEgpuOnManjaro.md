@@ -154,4 +154,26 @@
   ```
 
 ## 完成图
+
 ![IMG](images/egpu_passthrough.png)
+
+## 追记：性能和安定性相关
+
+- CPU绑定（20190721追记）
+
+  1. 目的
+     1. 缓存重用，减少content switch
+  2. 设定
+     1. 运行中环境设定（非持久化）'sudo virsh vcpupin <domain-id> <vcpu-id> <host-cpu-id>'
+     2. 持久化设定
+        1. ‘sudo virsh edit <domain-id>’
+        2. 加入以下绑定部分（id按照实际环境的cpu数指定）
+        
+        ```xml
+          <cputune>
+            <vcpupin vcpu='0' cpuset='4'/>
+            <vcpupin vcpu='1' cpuset='5'/>
+            <vcpupin vcpu='2' cpuset='6'/>
+            <vcpupin vcpu='3' cpuset='7'/>
+          </cputune>
+        ```
