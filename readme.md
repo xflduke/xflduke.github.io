@@ -12,7 +12,7 @@
   - [AgileJapan2019](https://xflduke.github.io/pages/agileJapan2019/メモ)
 
 - Memo
-  - [富士山登顶记事](https://xflduke.github.io/pages/yamareco/fujisan)
+  - [富士山登山备忘](https://xflduke.github.io/pages/yamareco/fujisan)
   - [macOS设定](https://xflduke.github.io/pages/macos/macosMemo)
 
 ## Support or Contact
