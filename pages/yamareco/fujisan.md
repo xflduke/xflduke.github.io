@@ -1,8 +1,8 @@
-# Mr FujiSan 记事
+# Mr FujiSan 登山备忘
 
 <a href="https://xflduke.github.io/">Back to Index</a>
 
-* [Mr FujiSan 记事](#mr-fujisan-记事)
+* [Mr FujiSan 登山备忘](#mr-fujisan-登山备忘)
   * [富士山简介](#富士山简介)
   * [必需物品](#必需物品)
     * [鞋](#鞋)
