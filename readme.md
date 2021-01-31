@@ -5,6 +5,7 @@
 - Memo
   - [Passthrough egpu on manjaro](https://xflduke.github.io/pages/passthroughPCI/passthroughEgpuOnManjaro)
   - [kvm nested virtualization](https://xflduke.github.io/pages/kvmNestVm/kvmNestVm)
+  - [keepalived+nginx+tomcat](https://xflduke.github.io/pages/keepalived_nginx/index)
 
 - Memo
   - [AWS MindMap](https://github.com/xflduke/learning_mindmap/tree/master/AWS_Arch/AWS_MindMap.pdf)
@@ -14,7 +15,6 @@
 - Memo
   - [富士山登山备忘](https://xflduke.github.io/pages/yamareco/fujisan)
   - [macOS设定](https://xflduke.github.io/pages/macos/macosMemo)
-  - [keepalived+nginx+tomcat](https://xflduke.github.io/pages/keepalived_nginx/index)
 
 ## Support or Contact
 
