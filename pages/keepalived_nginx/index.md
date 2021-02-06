@@ -22,10 +22,8 @@
   - fedora (keepalived backup, nginx)
   - centos 8 (keepalived backup, nginx)
     - install from boot
-    - repos sources : http://mirror.centos.org/centos/8/BaseOS/x86_64/os/
-
+    - repos sources : http://mirror.centos.org/centos/8/BaseOS/x86_64/os/ll
 [//]: <> (参照：https://linuxhint.com/install_centos8_netboot_iso/)
-
   - ubuntu (tomcat)
   - centos 8 (tomcat)
     - install from full media
