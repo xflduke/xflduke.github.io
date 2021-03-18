@@ -20,3 +20,6 @@
 ## Support or Contact
 
 Having trouble with Pages? Check out our[contact support](https://github.com/xflduke/xflduke.github.io) and we’ll help you sort it out.
+
+
+(payload pluck(data) ->  if (data is String) data else data map((value) -> (value pluck $ joinBy "")) reduce ($$ ++ $)) reduce ($$ ++ $)
