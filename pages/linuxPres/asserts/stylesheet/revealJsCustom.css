@@ -24,3 +24,14 @@ li {
 .reveal h6 {
     text-transform: none;
 }
+
+
+  /* 1. Style header/footer <div> so they are positioned as desired. */
+  .reveal .header {
+    z-index: 1;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 0.5em;
+  }
+
