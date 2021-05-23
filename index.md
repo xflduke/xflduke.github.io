@@ -7,6 +7,7 @@
   - [kvm nested virtualization](https://xflduke.github.io/pages/kvmNestVm/kvmNestVm)
   - [keepalived+nginx+tomcat](https://xflduke.github.io/pages/keepalived_nginx/index)
   - [dynamodb on centos](https://xflduke.github.io/pages/springboot_dynamoDB_local/index)
+  - [linux course](https://xflduke.github.io/pages/linuxPres/index)
 
 - Memo
   - [AWS MindMap](https://github.com/xflduke/learning_mindmap/tree/master/AWS_Arch/AWS_MindMap.pdf)
