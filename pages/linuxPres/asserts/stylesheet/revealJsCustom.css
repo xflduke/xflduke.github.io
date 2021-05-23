@@ -1,0 +1,26 @@
+#section1 h1, #section1 p {
+    text-align: center;
+}
+
+h1,
+h2,
+h3,
+ul,
+li,
+ p {
+    text-align: left;
+}
+
+ul,
+li {
+    width: 100%
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+    text-transform: none;
+}
