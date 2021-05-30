@@ -4,28 +4,26 @@
 
 ### nanoについて
 
- - `nano ファイルパス`
-   - コマンド存在しない場合：`dnf -y install nano`.
+- `nano ファイルパス`
+  - コマンド存在しない場合：`dnf -y install nano`.
 
 
 
- - `nano`のイメージ
+  - `nano`のイメージ
 ![nanoイメージ](../asserts/image/nano.png)
 
 
 
- - メタキーの説明
-   - Windows：`^キーはCtrlとキー同時押下、M-キーはAltとキー同時押下`
-   - MacOS  ：`^キーはCtrlとキー同時押下、M-キーはEsc押下後キー押下`
+- メタキーの説明
+  - Windows：`^キーはCtrlとキー同時押下、M-キーはAltとキー同時押下`
+  - MacOS  ：`^キーはCtrlとキー同時押下、M-キーはEsc押下後キー押下`
 
 
 
 ## viについて
 
-
-
- - コマンドモード
- - 編集モード
+- コマンドモード
+- 編集モード
 
 
 
