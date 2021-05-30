@@ -35,12 +35,12 @@
    - `-n`：検索結果と合わせて行番号も表示
    - `-v`：パターンがマッチしない行を表示する
    - `-E`：拡張正規表現を利用
- 
+
 
 
  ## 演習：/etc/ssh/sshd_config中のコメント行の一覧を出す
  ## 演習：/etc/ssh/sshd_config中のコメントではない行の一覧を出す
- 
+
 
 
 ### grepのその他
@@ -60,11 +60,11 @@
 
 
 
-   - コマンド：
-     - `a|d|i`：指定行の次の行を追加、削除、前行を追加
-       - 例：`nl /etc/passwd | sed '1,1d'`
-       - 例：`nl /etc/passwd | sed '1i TITLE：Hello World'`
-     - `s`：パターン指定の置き換え
-       - 例：`nl /etc/passwd | sed '1,10s/bin/BIN/g'`
-     - `y`：文字ごとの置き換え
-       - 例：`nl /etc/passwd | sed '1,10y/bin/BIN/g'`
+ - コマンド：
+   - `a|d|i`：指定行の次の行を追加、削除、前行を追加
+     - 例：`nl /etc/passwd | sed '1,1d'`
+     - 例：`nl /etc/passwd | sed '1i TITLE：Hello World'`
+   - `s`：パターン指定の置き換え
+     - 例：`nl /etc/passwd | sed '1,10s/bin/BIN/g'`
+   - `y`：文字ごとの置き換え
+     - 例：`nl /etc/passwd | sed '1,10y/bin/BIN/g'`
