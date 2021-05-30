@@ -8,6 +8,10 @@
   - [keepalived+nginx+tomcat](https://xflduke.github.io/pages/keepalived_nginx/index)
   - [dynamodb on centos](https://xflduke.github.io/pages/springboot_dynamoDB_local/index)
   - [linux course](https://xflduke.github.io/pages/linuxPres/index)
+  - [linux course1(Recognize Linux)](https://xflduke.github.io/pages/linuxPres/linux1/index.html)
+  - [linux course2(command editor and bash)](https://xflduke.github.io/pages/linuxPres/linux2/index.html)
+  - [linux course3(server)](https://xflduke.github.io/pages/linuxPres/linux3/index.html)
+
 
 - Memo
   - [AWS MindMap](https://github.com/xflduke/learning_mindmap/tree/master/AWS_Arch/AWS_MindMap.pdf)
@@ -21,4 +25,3 @@
 ## Support or Contact
 
 Having trouble with Pages? Check out our[contact support](https://github.com/xflduke/xflduke.github.io) and we’ll help you sort it out.
-
