@@ -1,1 +1,1 @@
-![image](asserts/image/linux-history.png )
+![image](../asserts/image/linux-history.png )
