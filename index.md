@@ -12,6 +12,9 @@
   - [linux course2(command editor and bash)](https://xflduke.github.io/pages/linuxPres/linux2/index.html)
   - [linux course3(server)](https://xflduke.github.io/pages/linuxPres/linux3/index.html)
 
+- Tools
+  - [DeviceResolution](https://xflduke.github.io/pages/screenResolution/index.html)
+
 - Memo
   - [AWS MindMap](https://github.com/xflduke/learning_mindmap/tree/master/AWS_Arch/AWS_MindMap.pdf)
   - [Linux Virtualization & High Availability](https://github.com/xflduke/learning_mindmap/tree/master/Linux%20Virtualization%20%26%20High%20Availability/Linux%20Virtualization%20%26%20High%20Availability.pdf)
