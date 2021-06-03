@@ -1,0 +1,61 @@
+<html>
+
+<head>
+  <!-- <style>
+
+    @media only screen and (min-width: 0px) and (max-width: 1px) {
+      .px::before {
+        content: '0~1';
+      }
+    }
+  </style> -->
+
+  <script>
+
+
+
+    function getCss(cells, eleClass) {
+      for (i = 0; i <= 4096; i++) {
+        pxCss = pxCss + "        " + '@media only screen and (min-width: ' + i + cells + ') and (max-width: ' + (i + 1) + cells + ') { .' + eleClass + '::before {content: "' + i + '~' + (i + 1) + '"; } }'
+      }
+      return pxCss;
+    }
+    // Create our stylesheet
+    var style = document.createElement('style');
+    var pxCss = getCss("px", "px");
+    var emCss = getCss("em", "em");
+  
+  
+    style.innerText = pxCss + emCss;
+  
+    // Get the first script tag
+    var ref = document.querySelector('script');
+  
+    // Insert our new styles before the first script tag
+    ref.parentNode.insertBefore(style, ref);
+
+    function displaySize(){
+      var screenInfo = "screen avail/width width:" + screen.availWidth + "/" + screen.width;
+      var pageInfo = "page inner/outter/width/avail width：" + window.innerWidth + "/" + window.outerWidth + "/" + window.width + "/" + window.availWidth;
+      document.getElementById("screen").innerText= screenInfo;
+      document.getElementById("page").innerHTML = pageInfo;
+    }
+
+    window.onload = function() {
+      displaySize();
+      window.onresize = displaySize();
+    }
+
+  </script>
+</head>
+
+<body>
+  <div class='resp'>You width in css is:<span class='px'> px</span> </div>
+  <div class='resp'>You width in css is:<span class='em'> em</span> </div>
+  <div>
+    <span id="screen" style="display: block;"> </span>
+    <span id="page" style="display: block;"> </span>
+  </div>
+</body>
+
+</html>
