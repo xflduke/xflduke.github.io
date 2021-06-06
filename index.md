@@ -10,7 +10,7 @@
   - [linux course](https://xflduke.github.io/pages/linuxPres/index)
   - [linux course1(Recognize Linux)](https://xflduke.github.io/pages/linuxPres/linux1/index.html)
   - [linux course2(command editor and bash)](https://xflduke.github.io/pages/linuxPres/linux2/index.html)
-  - [linux course3(server)](https://xflduke.github.io/pages/linuxPres/linux3/index.html)
+  - [linux course3(linux as a service)](https://xflduke.github.io/pages/linuxPres/linux3/index.html)
 
 - Tools
   - [DeviceResolution](https://xflduke.github.io/pages/screenResolution/index.html)
