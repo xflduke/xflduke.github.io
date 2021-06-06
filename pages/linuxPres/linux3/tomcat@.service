@@ -1,0 +1,28 @@
+[Unit]
+Description=Tomcat - instance %i
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+WorkingDirectory=/var/tomcat%i
+
+Environment="JAVA_HOME=/usr/lib/jvm/java-openjdk/"
+Environment="JAVA_OPTS="
+
+Environment="CATALINA_PID=/run/tomcat%i/tomcat.pid"
+Environment="CATALINA_BASE=/opt/tomcat%i/"
+Environment="CATALINA_HOME=/opt/tomcat%i/"
+Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+
+ExecStart=/opt/tomcat%i/bin/startup.sh
+ExecStop=/opt/tomcat%i/bin/shutdown.sh
+
+#RestartSec=10
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target

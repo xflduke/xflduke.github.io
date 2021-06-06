@@ -71,3 +71,5 @@
       - `sudo setenforce 0`
     - firewalldを一旦停止
       - `sudo systemctl stop firewalld`
+    - IPアドレスが制限されているか
+      - `/etc/hosts.deny`と`/etc/hosts.allow`を確認
