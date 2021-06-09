@@ -11,7 +11,24 @@
   - 次：ディレクトリのフルパス
   - 次：ディレクトリ直下のファイル一覧と空白では無いの行の数
   - 末尾：処理日付と終了時点
+<!-- 
+```bash
+#!/bin/bash
+date
+echo $1
+#ls $1 | wc -l
+#(find $1 -maxdepth 1 -type f' -print0 | xargs cat ) | wc -l
+#find . -maxdepth 1 -type f | xargs wc -l
+#total=0
 
+for file in `find $1 -mindepth 1 -type f`; do
+ numLines=`cat $file | grep -v "^\s*$" | wc -l`
+# total=$(($total + $numLines))
+ echo "  " $numLines $file
+done
+date
+```
+-->
 
 
 ### bashの主な仕様

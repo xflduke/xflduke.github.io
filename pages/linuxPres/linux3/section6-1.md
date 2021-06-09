@@ -2,6 +2,7 @@
 
 
 
+- Apache httpd →　Apache TomcatのAJP経由の連携
 - 以下のいずれのサービスのインストール
   - データベース（PostgreSQL等）
   - メールサーバ（Postfix等）

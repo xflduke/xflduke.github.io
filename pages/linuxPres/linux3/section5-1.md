@@ -62,11 +62,6 @@
 
 - 結果確認
   - `curl 127.0.0.1:8080`
-
-
-
-## 演習：Apache httpd →　Apache TomcatのAJP経由の連携
-
 <!--
 ### rpmの常用コマンド
 

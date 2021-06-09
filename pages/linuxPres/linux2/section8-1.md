@@ -39,7 +39,11 @@
 
 
  ## 演習：/etc/ssh/sshd_config中のコメント行の一覧を出す
+ <!-- cat /etc/ssh/sshd_config | grep ^# -->
  ## 演習：/etc/ssh/sshd_config中のコメントではない行の一覧を出す
+ <!-- cat /etc/ssh/sshd_config | grep -v ^# -->
+ <!-- cat /etc/ssh/sshd_config | grep -v ^# | uniq -->
+ <!-- cat /etc/ssh/sshd_config | grep -v ^# | grep -v ^$ -->
 
 
 

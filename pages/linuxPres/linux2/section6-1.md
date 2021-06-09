@@ -12,8 +12,8 @@
 
 
 
-## 演習：/var/log/system.log`の出力内容を監視する
-
+## 演習：/var/log/messages`の出力内容を監視する
+<!--`tail -200f /var/log/system.log`-->
 
 
 ### ファイル統計
