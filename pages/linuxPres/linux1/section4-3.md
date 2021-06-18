@@ -1,4 +1,4 @@
-### AWS Cloudのlinux環境の準備（Step2、Step3）
+### AWS Cloudのlinux環境の準備（Step2）
 #### Step2 CentOS 8に接続
   - 上記ダウンロードしたキーペアファイルをAWS Cloudshellにuploadする
   - EC2で先ほど作成した「CentOS 8」の状態を確認
@@ -8,6 +8,7 @@
 
 
 
+### AWS Cloudのlinux環境の準備（Step3）
 #### Step3 CentOS 8廃止
   - EC2で「インスタンス終了」を忘れずに実施してください。
   
