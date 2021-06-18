@@ -6,6 +6,8 @@
   - AWS CloudShellより下記コマンドで接続
     - `ssh -i "20210618CentOS8.pem" centos@XXX.XXX.XXX.XXX`
 
+
+
 #### Step3 CentOS 8廃止
   - EC2で「インスタンス終了」を忘れずに実施してください。
   
