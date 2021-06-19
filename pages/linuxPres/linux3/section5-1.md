@@ -54,6 +54,7 @@
   - `systemctl daemon-reload`：リロード
   - `systemctl enable tomcat@9.service`：有効にする
   - `systemctl start tomcat@9.service`：起動する
+
 <!-- 
   - `firewall-cmd --add-port=8080/tcp --permanent`
 -->
@@ -62,6 +63,7 @@
 
 - 結果確認
   - `curl 127.0.0.1:8080`
+
 <!--
 ### rpmの常用コマンド
 
