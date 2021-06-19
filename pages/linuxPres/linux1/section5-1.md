@@ -22,7 +22,7 @@
 - side channel mitigations：サイド チャネルの緩和策を無効にすると安定性と性能がアップできる、自端末での検証ではOFFでいい
 
 
- 
+
 ##  VM OSインストール中のコマンド
 
 - IP確認：(ensxx)
