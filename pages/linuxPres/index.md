@@ -1,5 +1,4 @@
-索引
-================
+## 索引
 
 - [Recognize Linux：Linux とは](linux1/index.html)
 - [Command and Editor](linux2/index.html)
