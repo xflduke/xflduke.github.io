@@ -2,6 +2,5 @@ theme: jekyll-theme-architect
 relative_links:
   enabled: true
   collections: true
-markdown: kramdown
 # Google Analytics
 google_analytics: UA-144752619-1
