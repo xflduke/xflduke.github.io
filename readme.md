@@ -11,6 +11,7 @@
   - [linux course1(Recognize Linux)](https://xflduke.github.io/pages/linuxPres/linux1/index.html)
   - [linux course2(command editor and bash)](https://xflduke.github.io/pages/linuxPres/linux2/index.html)
   - [linux course3(linux as a service)](https://xflduke.github.io/pages/linuxPres/linux3/index.html)
+  - [LPICについて](https://xflduke.github.io/pages/linuxPres/lpic/index.html)
 
 - Tools
   - [DeviceResolution](https://xflduke.github.io/pages/screenResolution/index.html)
