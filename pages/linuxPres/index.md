@@ -4,3 +4,4 @@
 - [Command and Editor](linux2/index.html)
 - [Linux As a Services](linux3/index.html)
 - [Linux MD Summary](summary.html)
+- [Lpic Exam Test](lpic/index.html)
