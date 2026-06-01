@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 2 · 定制与标准组成 | Customization &amp; Standards</title>
+<meta name="description" content="AI 编码工具的通用定制构件：rule、reference、command、skill、agent/subagent、hook、script/MCP；互操作协议 MCP/A2A/ACP/AG-UI；以及 Harness 概念。">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script>(function(){try{var d=document.documentElement,s=localStorage;var t=s.getItem('site_theme');if(t)d.setAttribute('data-theme',t);var f=s.getItem('site_fs');if(f)d.setAttribute('data-fs',f);var l=s.getItem('site_lang');if(l){d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':l);}}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" aria-label="menu">☰</button>
+  <span class="brand" data-i18n="brand">生成 AI × 开发 · 全体像</span>
+  <nav class="topnav">
+    <a href="index.html" data-i18n="nav.home">全体像</a>
+    <a href="part1.html" data-i18n="nav.part1">1 · 应用方式</a>
+    <a href="part2.html" class="active" data-i18n="nav.part2">2 · 定制与标准</a>
+    <a href="part3.html" data-i18n="nav.part3">3 · 变迁与展望</a>
+    <a href="demo.html" data-i18n="nav.demo">事例</a>
+    <a href="references.html" data-i18n="nav.refs">参照</a>
+  </nav>
+  <div class="topbar-tools">
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="zh">中</button><button data-lang="ja">日</button><button data-lang="en">EN</button>
+    </div>
+    <div class="lang-switch fs-switch" role="group" aria-label="font size">
+      <button data-fs="s" title="Small font">A</button><button data-fs="m" title="Medium font">A</button><button data-fs="l" title="Large font">A</button>
+    </div>
+    <button class="icon-btn theme-toggle" aria-label="toggle theme" title="Light / Dark">☀</button>
+    <button class="present-toggle" aria-pressed="false"><span class="dot"></span><span data-i18n="present.on">演讲模式</span></button>
+  </div>
+</header>
+<div class="scroll-progress"></div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4 data-i18n="toc">本页目录</h4>
+    <a href="#intro"><span class="lang lang-zh">通用概念声明</span><span class="lang lang-ja">汎用概念の前提</span><span class="lang lang-en">A Note on Concepts</span></a>
+    <a href="#constructs"><span class="lang lang-zh">定制构件</span><span class="lang lang-ja">構成要素</span><span class="lang lang-en">Building Blocks</span></a>
+    <a href="#arch"><span class="lang lang-zh">分层架构</span><span class="lang lang-ja">階層アーキ</span><span class="lang lang-en">Layered Arch.</span></a>
+    <a href="#bestpractice"><span class="lang lang-zh">最佳实践</span><span class="lang lang-ja">ベストプラクティス</span><span class="lang lang-en">Best Practices</span></a>
+    <a href="#protocols"><span class="lang lang-zh">互操作协议</span><span class="lang lang-ja">相互運用プロトコル</span><span class="lang lang-en">Protocols</span></a>
+    <a href="#harness">Harness</a>
+  </aside>
+
+  <main class="content">
+
+    <!-- 声明 -->
+    <section id="intro" class="section">
+      <span class="eyebrow">Part 2</span>
+      <h2 class="section-title"><span class="lang lang-zh">定制与标准组成</span><span class="lang lang-ja">カスタマイズと標準構成</span><span class="lang lang-en">Customization &amp; Standards</span></h2>
+      <div class="callout warn">
+        <h4>⚠ <span class="lang lang-zh">重要声明：讲的是「通用概念」，不是某个特定产品</span><span class="lang lang-ja">重要：これは「汎用概念」であり特定製品の話ではない</span><span class="lang lang-en">Important: these are generic concepts, not any specific product</span></h4>
+        <p class="muted"><span class="lang lang-zh">本页从 Claude Code / Codex / Copilot / OpenCode 等同类工具中抽象出共通的概念模型。各工具的命名与实现各异，但底层构件相通——理解了概念，换任何工具都能迁移。</span><span class="lang lang-ja">本ページは Claude Code / Codex / Copilot / OpenCode などから抽出した共通の概念モデル。名称や実装は製品ごとに異なるが、底層の構成要素は共通——概念を掴めばどのツールにも応用できる。</span><span class="lang lang-en">This page abstracts a shared conceptual model from tools like Claude Code / Codex / Copilot / OpenCode. Names and implementations differ per tool, but the underlying building blocks are common — grasp the concepts and they transfer anywhere.</span></p>
+      </div>
+    </section>
+
+    <!-- 定制构件 -->
+    <section id="constructs" class="section">
+      <span class="eyebrow">Building Blocks</span>
+      <h2 class="section-title"><span class="lang lang-zh">通用定制构件</span><span class="lang lang-ja">汎用の構成要素</span><span class="lang lang-en">The Building Blocks</span></h2>
+      <div class="cards cols-3">
+        <div class="card"><h3>Rule / Instruction</h3>
+          <p class="muted"><span class="lang lang-zh">项目级指令与约定（如 AGENTS.md 类规则文件）。</span><span class="lang lang-ja">プロジェクト規約（AGENTS.md 等）。</span><span class="lang lang-en">Project-level rules &amp; conventions (e.g. an AGENTS.md-style file).</span></p>
+          <p style="font-size:12.5px"><span class="pill purple"><span class="lang lang-zh">类比</span><span class="lang lang-ja">類比</span><span class="lang lang-en">like</span></span> <span class="lang lang-zh">员工手册</span><span class="lang lang-ja">就業規則</span><span class="lang lang-en">employee handbook</span></p>
+        </div>
+        <div class="card"><h3>Reference / Context</h3>
+          <p class="muted"><span class="lang lang-zh">上下文、文档引用、记忆（memory）。</span><span class="lang lang-ja">文脈・ドキュメント参照・記憶。</span><span class="lang lang-en">Context, doc references, memory.</span></p>
+          <p style="font-size:12.5px"><span class="pill purple">like</span> <span class="lang lang-zh">随身资料袋</span><span class="lang lang-ja">資料バッグ</span><span class="lang lang-en">a satchel of reference docs</span></p>
+        </div>
+        <div class="card"><h3>Command</h3>
+          <p class="muted"><span class="lang lang-zh">自定义斜杠命令，封装常用流程。</span><span class="lang lang-ja">カスタムスラッシュコマンド。</span><span class="lang lang-en">Custom slash commands wrapping routines.</span></p>
+          <p style="font-size:12.5px"><span class="pill purple">like</span> <span class="lang lang-zh">快捷宏</span><span class="lang lang-ja">マクロ</span><span class="lang lang-en">a keyboard macro</span></p>
+        </div>
+        <div class="card"><h3>Skill</h3>
+          <p class="muted"><span class="lang lang-zh">可复用能力包（指令+脚本+资源）。</span><span class="lang lang-ja">再利用可能な能力パック。</span><span class="lang lang-en">Reusable capability packs (instructions+scripts+assets).</span></p>
+          <p style="font-size:12.5px"><span class="pill purple">like</span> <span class="lang lang-zh">可插拔技能卡</span><span class="lang lang-ja">差込式スキルカード</span><span class="lang lang-en">a plug-in skill card</span></p>
+        </div>
+        <div class="card"><h3>Agent / Subagent</h3>
+          <p class="muted"><span class="lang lang-zh">主代理与子代理分工；子代理隔离上下文，且<b>同样能调用工具与技能</b>。</span><span class="lang lang-ja">主・子の分業；子は文脈を分離しつつ、<b>ツールやスキルも使える</b>。</span><span class="lang lang-en">Main + subagents; subagents have isolated context and <b>can use tools/skills too</b>.</span></p>
+          <p style="font-size:12.5px"><span class="pill purple">like</span> <span class="lang lang-zh">专项外包小组</span><span class="lang lang-ja">専門の外注チーム</span><span class="lang lang-en">a specialist sub-team</span></p>
+        </div>
+        <div class="card"><h3>Hook</h3>
+          <p class="muted"><span class="lang lang-zh">生命周期钩子，<b>不止拦截工具</b>：在 prompt/编辑/工具/提交/结束等事件上做格式化、<b>检查、通知、阻断</b>危险操作。</span><span class="lang lang-ja">ライフサイクルフック、<b>ツール以外も</b>：prompt/編集/ツール/コミット/終了等で整形・<b>検査・通知・ブロック</b>。</span><span class="lang lang-en">Lifecycle hooks — <b>not just tools</b>: on prompt/edit/tool/commit/stop events, do formatting, <b>checks, notifications, blocking</b> risky actions.</span></p>
+          <p style="font-size:12.5px"><span class="pill purple">like</span> <span class="lang lang-zh">IFTTT + 质检 + 通知</span><span class="lang lang-ja">IFTTT + 検査 + 通知</span><span class="lang lang-en">IFTTT + QA gate + alerts</span></p>
+        </div>
+        <div class="card"><h3>Script / Tool</h3>
+          <p class="muted"><span class="lang lang-zh">脚本与工具；MCP 作为通用「工具接入协议」。</span><span class="lang lang-ja">スクリプトとツール；MCP は汎用「ツール接続」。</span><span class="lang lang-en">Scripts &amp; tools; MCP as the generic "tool connector."</span></p>
+          <p style="font-size:12.5px"><span class="pill purple">like</span> <span class="lang lang-zh">工具界的 USB-C</span><span class="lang lang-ja">ツールの USB-C</span><span class="lang lang-en">USB-C for tools</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 分层架构 -->
+    <section id="arch" class="section">
+      <span class="eyebrow">Layered Architecture</span>
+      <h2 class="section-title"><span class="lang lang-zh">这些构件如何组合</span><span class="lang lang-ja">構成要素の組み合わせ</span><span class="lang lang-en">How They Compose</span></h2>
+      <div class="mermaid">
+flowchart TB
+    M["Model"]:::m
+    R["Rules / Context / Memory"]:::r
+    C["Commands / Skills"]:::c
+    T["Tools (MCP) / Scripts"]:::t
+    A["Agent / Subagents"]:::a
+    H["Hooks"]:::h
+    E["Lifecycle events<br/>prompt · edit · tool · commit · stop"]:::e
+    M --> R --> C --> T
+    A -- "use" --> C
+    A -- "use" --> T
+    A -- "spawn" --> A
+    H -- "check · format · notify · block" --> E
+    classDef m stroke:#2bd4d4,stroke-width:2px;
+    classDef r stroke:#5b8cff,stroke-width:2px;
+    classDef c stroke:#b07bff,stroke-width:2px;
+    classDef t stroke:#5b8cff,stroke-width:2px;
+    classDef h stroke:#ffb454,stroke-width:2px;
+    classDef a stroke:#43d18a,stroke-width:2px;
+    classDef e stroke:#b07bff,stroke-width:2px;
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th><span class="lang lang-zh">构件</span><span class="lang lang-ja">要素</span><span class="lang lang-en">Block</span></th>
+            <th><span class="lang lang-zh">解决什么</span><span class="lang lang-ja">何を解決</span><span class="lang lang-en">Solves</span></th>
+            <th><span class="lang lang-zh">何时落地</span><span class="lang lang-ja">いつ使う</span><span class="lang lang-en">When</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td>Rule</td><td><span class="lang lang-zh">统一风格与约束</span><span class="lang lang-ja">一貫した規約</span><span class="lang lang-en">consistent conventions</span></td><td><span class="lang lang-zh">团队/项目起步</span><span class="lang lang-ja">立ち上げ時</span><span class="lang lang-en">project kickoff</span></td></tr>
+            <tr><td>Skill</td><td><span class="lang lang-zh">封装可复用能力</span><span class="lang lang-ja">能力の再利用</span><span class="lang lang-en">reusable capability</span></td><td><span class="lang lang-zh">重复流程</span><span class="lang lang-ja">反復作業</span><span class="lang lang-en">repeated workflows</span></td></tr>
+            <tr><td>Hook</td><td><span class="lang lang-zh">强制自动化（格式化/校验）</span><span class="lang lang-ja">自動化の強制</span><span class="lang lang-en">enforced automation</span></td><td><span class="lang lang-zh">每次提交/编辑前后</span><span class="lang lang-ja">編集/コミット前後</span><span class="lang lang-en">on edit/commit</span></td></tr>
+            <tr><td>MCP / Tool</td><td><span class="lang lang-zh">接外部数据与系统</span><span class="lang lang-ja">外部接続</span><span class="lang lang-en">connect data/systems</span></td><td><span class="lang lang-zh">需要真实世界数据</span><span class="lang lang-ja">実データが必要</span><span class="lang lang-en">need real-world data</span></td></tr>
+            <tr><td>Subagent</td><td><span class="lang lang-zh">隔离上下文、并行专项</span><span class="lang lang-ja">文脈分離・並行</span><span class="lang lang-en">isolate context, parallelize</span></td><td><span class="lang lang-zh">大任务拆解</span><span class="lang lang-ja">大タスク分割</span><span class="lang lang-en">decompose big tasks</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 最佳实践 -->
+    <section id="bestpractice" class="section">
+      <span class="eyebrow">Context Engineering</span>
+      <h2 class="section-title"><span class="lang lang-zh">用好这些构件：上下文工程</span><span class="lang lang-ja">使いこなす：コンテキスト工学</span><span class="lang lang-en">Using Them Well: Context Engineering</span></h2>
+      <div class="cards cols-2">
+        <div class="card"><h3><span class="lang lang-zh">上下文文件写法</span><span class="lang lang-ja">コンテキストファイル</span><span class="lang lang-en">Context file structure</span></h3>
+          <p class="muted"><span class="lang lang-zh">bullet 列规则 + Preferred/Avoid 代码对照 + metadata（last_updated/owner/scope）；主动排查「context gap」。</span><span class="lang lang-ja">箇条書きの規則 + Preferred/Avoid のコード対比 + メタデータ；「context gap」を能動的に洗い出す。</span><span class="lang lang-en">Bulleted rules + Preferred/Avoid code pairs + metadata (last_updated/owner/scope); actively hunt for "context gaps."</span></p>
+        </div>
+        <div class="card"><h3>Evals</h3>
+          <p class="muted"><span class="lang lang-zh">测「全轨迹」（工具选择 + 结果），不只看最终答案。</span><span class="lang lang-ja">「全軌跡」（ツール選択＋結果）を評価。最終回答だけ見ない。</span><span class="lang lang-en">Test full trajectories (tool choice + outcome), not just the final answer.</span></p>
+        </div>
+        <div class="card"><h3><span class="lang lang-zh">五层安全护栏</span><span class="lang lang-ja">5 層ガードレール</span><span class="lang lang-en">Five-layer guardrails</span></h3>
+          <p class="muted"><span class="lang lang-zh">prompt 级 → schema 工具门控 → 运行时审批（不可逆操作）→ 工具级校验 → 生命周期 hook；policy-as-code + 防注入。</span><span class="lang lang-ja">prompt 級 → schema ゲート → 実行時承認 → ツール検証 → ライフサイクル hook；policy-as-code。</span><span class="lang lang-en">prompt-level → schema tool-gating → runtime approval (irreversible ops) → tool validation → lifecycle hooks; policy-as-code.</span></p>
+        </div>
+        <div class="card"><h3><span class="lang lang-zh">上下文管理（带数据）</span><span class="lang lang-ja">文脈管理（データ）</span><span class="lang lang-en">Context management (data)</span></h3>
+          <div class="stats">
+            <div class="stat"><div class="n">+29%</div><div class="l">context editing</div></div>
+            <div class="stat"><div class="n">+39%</div><div class="l">+ memory tool</div></div>
+            <div class="stat"><div class="n">-84%</div><div class="l"><span class="lang lang-zh">token（100 轮）</span><span class="lang lang-ja">token（100 ターン）</span><span class="lang lang-en">tokens (100-turn)</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout tip"><span class="lang lang-zh"><b>Subagent 模式：</b>隔离上下文、各自返回 1–2k token 摘要——Anthropic 研究系统较单 agent 提升 <b>+90.2%</b>。</span><span class="lang lang-ja"><b>Subagent パターン：</b>文脈を分離し各自 1–2k token の要約を返す——Anthropic の調査システムで単一 agent 比 <b>+90.2%</b>。</span><span class="lang lang-en"><b>Subagent pattern:</b> isolated context, each returns a 1–2k-token summary — Anthropic's research system beat single-agent by <b>+90.2%</b>.</span></div>
+    </section>
+
+    <!-- 互操作协议 -->
+    <section id="protocols" class="section">
+      <span class="eyebrow">Interop Protocols</span>
+      <h2 class="section-title"><span class="lang lang-zh">Agent 互操作协议（标准化层）</span><span class="lang lang-ja">Agent 相互運用プロトコル</span><span class="lang lang-en">Agent Interop Protocols</span></h2>
+      <p class="lead"><span class="lang lang-zh">这些协议是 agent 生态的「连接标准」，<b>分层互补、非竞争</b>：UI ↔ agent ↔ agent ↔ 工具，各管一层。</span><span class="lang lang-ja">これらは agent エコシステムの「接続標準」。<b>階層的に補完し合い、競合しない</b>：UI ↔ agent ↔ agent ↔ ツール。</span><span class="lang lang-en">These are the ecosystem's connection standards — <b>complementary layers, not competitors</b>: UI ↔ agent ↔ agent ↔ tools.</span></p>
+      <div class="mermaid">
+flowchart TB
+    U["👤 User / Frontend"]:::u
+    A1["Agent"]:::ag
+    A2["Other Agents<br/>(other vendors)"]:::ag
+    TL["Tools / Data / Systems"]:::tl
+    U -- "AG-UI" --> A1
+    A1 -- "A2A / ACP" --> A2
+    A1 -- "MCP" --> TL
+    A2 -- "MCP" --> TL
+    classDef u stroke:#ffb454,stroke-width:2px;
+    classDef ag stroke:#b07bff,stroke-width:2px;
+    classDef tl stroke:#5b8cff,stroke-width:2px;
+      </div>
+
+      <div class="cards cols-2">
+        <div class="card"><h3>MCP <span class="pill blue">agent ↔ tools</span></h3>
+          <p class="muted"><span class="lang lang-zh">Anthropic。把模型接到工具/数据（纵向）。事实标准：10000+ server、各大厂内置。</span><span class="lang lang-ja">Anthropic。モデルをツール/データに接続（縦）。事実上の標準：10000+ server。</span><span class="lang lang-en">Anthropic. Connects the model to tools/data (vertical). De-facto standard: 10,000+ servers.</span></p></div>
+        <div class="card"><h3>A2A <span class="pill purple">agent ↔ agent</span></h3>
+          <p class="muted"><span class="lang lang-zh">Google → Linux Foundation。跨厂商 agent 发现→委派→协作。ADK / LangGraph / CrewAI / LlamaIndex / SK / AutoGen 原生支持；150+ 组织。</span><span class="lang lang-ja">Google → Linux Foundation。跨ベンダーで発見→委譲→協調。主要フレームワークが原生対応；150+ 組織。</span><span class="lang lang-en">Google → Linux Foundation. Cross-vendor discover→delegate→collaborate. Native in ADK/LangGraph/CrewAI/LlamaIndex/SK/AutoGen; 150+ orgs.</span></p></div>
+        <div class="card"><h3>ACP <span class="pill purple">agent ↔ agent</span></h3>
+          <p class="muted"><span class="lang lang-zh">IBM / BeeAI → Linux Foundation。跨框架 inter-agent，纯 HTTP，可 curl/浏览器直连；与 A2A 同层、走向融合。</span><span class="lang lang-ja">IBM / BeeAI。フレームワーク跨ぎ、純 HTTP、curl/ブラウザ直結；A2A と同層で融合へ。</span><span class="lang lang-en">IBM / BeeAI → Linux Foundation. Cross-framework, plain HTTP, curl/browser-friendly; same layer as A2A, converging.</span></p></div>
+        <div class="card"><h3>AG-UI <span class="pill cyan">agent ↔ UI</span></h3>
+          <p class="muted"><span class="lang lang-zh">CopilotKit 等。事件流（消息/工具活动/UI 状态），让前端实时「看见 agent 思考」。补全第四层。</span><span class="lang lang-ja">CopilotKit 等。イベントストリームでフロントが「agent の思考」をリアルタイム表示。第 4 層を補完。</span><span class="lang lang-en">CopilotKit et al. Event stream (messages/tool activity/UI state) so the frontend sees the agent think live. Completes the 4th layer.</span></p></div>
+      </div>
+
+      <h3 style="margin-top:24px"><span class="lang lang-zh">具体代码例</span><span class="lang lang-ja">具体例</span><span class="lang lang-en">Concrete examples</span></h3>
+      <div data-tabs>
+        <div class="tabs">
+          <button class="tab-btn active">A2A · Agent Card</button>
+          <button class="tab-btn">A2A · Task (JSON-RPC)</button>
+          <button class="tab-btn">ACP · server</button>
+          <button class="tab-btn">MCP · tool call</button>
+        </div>
+        <div class="tab-panes">
+          <div class="pane active"><pre><code>// GET /.well-known/agent.json  —— 让别的 agent 发现你
+{
+  "name": "Pizza Agent",
+  "description": "Takes pizza orders",
+  "url": "https://pizza.example.com/a2a",
+  "version": "1.0.0",
+  "capabilities": { "streaming": true },
+  "skills": [{ "id": "order_pizza", "name": "Order a pizza" }]
+}</code></pre></div>
+          <div class="pane"><pre><code>// A2A: 一个 agent 给另一个 agent 派活（JSON-RPC 2.0 over HTTP/SSE）
+POST /a2a
+{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "message/send",
+  "params": {
+    "message": { "role": "user",
+      "parts": [{ "kind": "text", "text": "1 large margherita" }] }
+  }
+}
+// → 返回一个 Task（含 state: working / completed 与产出）</code></pre></div>
+          <div class="pane"><pre><code># ACP: 用 BeeAI 的 acp_sdk 暴露一个 agent（纯 HTTP）
+from acp_sdk.server import Server
+server = Server()
+
+@server.agent()
+async def echo(input, context):
+    return f"echo: {input[-1].parts[0].content}"
+
+# 启动：uv run server  →  也可 `beeai run echo` 打开本地聊天 UI</code></pre></div>
+          <div class="pane"><pre><code>// MCP: agent ↔ 工具（纵向）。客户端发现并调用 server 暴露的 tool
+{ "method": "tools/call",
+  "params": {
+    "name": "search_docs",
+    "arguments": { "query": "context window 2026" }
+  } }
+// server 返回结构化结果，agent 据此继续推理</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Harness -->
+    <section id="harness" class="section">
+      <span class="eyebrow">The Harness</span>
+      <h2 class="section-title">Harness = Model + <span class="lang lang-zh">这些构件的总和</span><span class="lang lang-ja">これら要素の総和</span><span class="lang lang-en">all of the above</span></h2>
+      <div class="callout"><p style="font-size:18px;margin:0"><b>Agent = Model + Harness</b></p>
+        <p class="muted" style="margin:6px 0 0"><span class="lang lang-zh"><b>精确定义：</b>harness 是包裹模型、把「会回答」变成「会在循环里行动」的<b>运行时机制</b>——调用模型、分发工具调用、管理上下文、执行安全策略、失败恢复的那个循环；以及它驱动的 prompt、工具、钩子、沙箱、子代理与反馈/恢复路径。</span><span class="lang lang-ja"><b>正確な定義：</b>harness はモデルを包み「応答」を「ループ内で行動」に変える<b>ランタイム機構</b>——モデル呼出・ツール分発・文脈管理・安全執行・失敗回復のループと、それが駆動する prompt・ツール・フック・サンドボックス・子エージェント・フィードバック/回復経路。</span><span class="lang lang-en"><b>Precise definition:</b> the harness is the <b>runtime machinery</b> wrapping the model that turns "responding" into "acting in a loop" — the loop that calls the model, dispatches tool calls, manages context, enforces safety, and recovers; plus the prompts, tools, hooks, sandboxes, subagents and feedback/recovery paths it drives.</span></p>
+      </div>
+      <div class="callout warn"><h4><span class="lang lang-zh">别混淆三个层级（这正是常见的违和感来源）</span><span class="lang lang-ja">混同しやすい 3 つの層</span><span class="lang lang-en">Three layers people conflate</span></h4>
+        <div class="table-wrap"><table>
+          <thead><tr><th><span class="lang lang-zh">术语</span><span class="lang lang-ja">用語</span><span class="lang lang-en">Term</span></th><th><span class="lang lang-zh">是什么</span><span class="lang lang-ja">何か</span><span class="lang lang-en">What</span></th></tr></thead>
+          <tbody>
+            <tr><td><b>Scaffolding</b></td><td><span class="lang lang-zh">首个 prompt <b>之前</b>组装好的静态部分：系统提示、工具 schema、子代理注册表。</span><span class="lang lang-ja">最初の prompt <b>前</b>に組む静的部分：システムプロンプト、ツール schema、子エージェント登録。</span><span class="lang lang-en">Static parts assembled <b>before</b> the first prompt: system prompt, tool schemas, subagent registry.</span></td></tr>
+            <tr><td><b>Harness</b></td><td><span class="lang lang-zh"><b>运行时</b>循环：驱动<b>单个</b> agent——调模型、分发工具、管理上下文、执行安全。</span><span class="lang lang-ja"><b>ランタイム</b>のループ：<b>単一</b> agent を駆動——モデル呼出・ツール分発・文脈管理・安全執行。</span><span class="lang lang-en"><b>Runtime</b> loop driving <b>one</b> agent — calls model, dispatches tools, manages context, enforces safety.</span></td></tr>
+            <tr><td><b>Orchestration</b></td><td><span class="lang lang-zh">把<b>多个</b> agent 当作单元来管理，各自跑自己的 harness（多 agent 系统）。「agent 管理」属于这一层。</span><span class="lang lang-ja"><b>複数</b> agent をユニットとして管理、各自が harness を持つ（マルチ agent）。「agent 管理」はこの層。</span><span class="lang lang-en">Manages <b>multiple</b> agents as units, each running its own harness (multi-agent). "Agent management" lives here.</span></td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted" style="font-size:12.5px;margin:8px 0 0"><span class="lang lang-zh">即：单个 agent 内的子代理调度属于 harness；跨多个 agent 的管理是 orchestration（在 harness 之上）。出处：Hugging Face agent glossary、Addy Osmani、DataCamp、Salesforce 等（2026）。</span><span class="lang lang-ja">＝1 agent 内の子調停は harness、複数 agent の管理は orchestration（harness の上）。出典：Hugging Face agent glossary、Addy Osmani、DataCamp、Salesforce 等。</span><span class="lang lang-en">I.e. subagent dispatch within one agent is harness; managing across agents is orchestration (above the harness). Sources: Hugging Face agent glossary, Addy Osmani, DataCamp, Salesforce (2026).</span></p>
+      </div>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">模型＝赛车手，harness＝底盘 / 安全带 / 仪表盘；orchestration＝车队总指挥（管理多辆车）。</span><span class="lang lang-ja">モデル＝レーサー、harness＝シャシー/シートベルト/計器；orchestration＝チーム監督（複数台を管理）。</span><span class="lang lang-en">Model = the driver; harness = chassis / seatbelt / dashboard; orchestration = the team principal managing many cars.</span></div>
+      <div class="cards cols-2">
+        <div class="card"><h3>① <span class="lang lang-zh">前馈 Feed-forward</span><span class="lang lang-ja">フィードフォワード</span><span class="lang lang-en">Feed-forward</span></h3>
+          <p class="muted">skills · guardrails · rules · reference<br><span class="lang lang-zh">——给模型约束与上下文。</span><span class="lang lang-ja">——モデルに制約と文脈を与える。</span><span class="lang lang-en">— give the model constraints and context.</span></p></div>
+        <div class="card"><h3>② <span class="lang lang-zh">反馈 Feedback / Sensors</span><span class="lang lang-ja">フィードバック / センサー</span><span class="lang lang-en">Feedback / Sensors</span></h3>
+          <p class="muted"><span class="lang lang-zh">测试 · lint · 类型检查 · 评审 · evals<br>——让 agent 在人看到之前自我纠错。</span><span class="lang lang-ja">テスト · lint · 型検査 · レビュー · evals<br>——人が見る前に自己修正させる。</span><span class="lang lang-en">tests · lint · type-check · review · evals<br>— let the agent self-correct before a human looks.</span></p></div>
+      </div>
+      <p class="muted"><span class="lang lang-zh">→ Part 3 会讲：把 harness 设计好，已经成为一门工程学科。</span><span class="lang lang-ja">→ Part 3 では：harness を設計することが工学分野になりつつある。</span><span class="lang lang-en">→ Part 3: designing the harness has become an engineering discipline.</span></p>
+    </section>
+
+    <footer class="footer"><p data-i18n="footer">教学演讲材料 · 静态站点 · 内容核实于 2026-05，带版本号/数字的条目请以最新官方信息为准。</p></footer>
+  </main>
+</div>
+
+<div class="present-hint"><span data-i18n="present.hint">方向键 / 空格 翻屏 · Esc 退出</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  if (!window.mermaid) return;
+  var blocks = [].slice.call(document.querySelectorAll(".mermaid"));
+  blocks.forEach(function (b) { b.dataset.src = b.textContent; });
+  function render() {
+    var light = document.documentElement.getAttribute("data-theme") === "light";
+    mermaid.initialize({ startOnLoad: false, theme: light ? "default" : "dark",
+      themeVariables: { fontFamily: "inherit", fontSize: "14px" }, flowchart: { curve: "basis" } });
+    blocks.forEach(function (b) { b.removeAttribute("data-processed"); b.innerHTML = b.dataset.src; });
+    try { mermaid.run({ nodes: blocks }); } catch (e) { try { mermaid.init(undefined, blocks); } catch (e2) {} }
+  }
+  render();
+  document.addEventListener("themechange", render);
+})();
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

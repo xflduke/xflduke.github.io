@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pip install --quiet truststore)",
+      "Bash(python -c \"import importlib.util as u; print\\('truststore now:', 'installed' if u.find_spec\\('truststore'\\) else 'STILL NOT installed'\\)\")",
+      "Bash(python *)",
+      "WebSearch"
+    ]
+  }
+}

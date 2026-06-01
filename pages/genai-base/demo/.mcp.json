@@ -1,0 +1,18 @@
+{
+  "$comment": "MCP サーバ定義（例・匿名）。Part2「MCP = ツール層」の実地。すべて構内で完結し、外部 SaaS には接続しない。",
+  "mcpServers": {
+    "onprem-postgres": {
+      "$comment": "オンプレ PostgreSQL への読み取り専用接続（スキーマ自己点検・設計確認用）。資格情報は env から。",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${OPSM_DB_READONLY_URL}"
+      }
+    },
+    "project-docs": {
+      "$comment": "リポジトリ内の仕様・設計・用語を参照するためのローカル・ファイルサーバ。構内のみ。",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./docs"]
+    }
+  }
+}

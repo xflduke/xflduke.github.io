@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生成 AI × 开发 · 全体像 | Generative AI for Software Development</title>
+<meta name="description" content="生成 AI 应用于开发与生产的全体像：应用方式、工具定制与标准、开发模式的变迁与展望。教学演讲用静态站点。">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script>(function(){try{var d=document.documentElement,s=localStorage;var t=s.getItem('site_theme');if(t)d.setAttribute('data-theme',t);var f=s.getItem('site_fs');if(f)d.setAttribute('data-fs',f);var l=s.getItem('site_lang');if(l){d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':l);}}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ===== 顶栏 ===== -->
+<header class="topbar">
+  <button class="menu-toggle" aria-label="menu">☰</button>
+  <span class="brand" data-i18n="brand">生成 AI × 开发 · 全体像</span>
+  <nav class="topnav">
+    <a href="index.html" class="active" data-i18n="nav.home">全体像</a>
+    <a href="part1.html" data-i18n="nav.part1">1 · 应用方式</a>
+    <a href="part2.html" data-i18n="nav.part2">2 · 定制与标准</a>
+    <a href="part3.html" data-i18n="nav.part3">3 · 变迁与展望</a>
+    <a href="demo.html" data-i18n="nav.demo">事例</a>
+    <a href="references.html" data-i18n="nav.refs">参照</a>
+  </nav>
+  <div class="topbar-tools">
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="zh">中</button>
+      <button data-lang="ja">日</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <div class="lang-switch fs-switch" role="group" aria-label="font size">
+      <button data-fs="s" title="Small font">A</button><button data-fs="m" title="Medium font">A</button><button data-fs="l" title="Large font">A</button>
+    </div>
+    <button class="icon-btn theme-toggle" aria-label="toggle theme" title="Light / Dark">☀</button>
+    <button class="present-toggle" aria-pressed="false">
+      <span class="dot"></span><span data-i18n="present.on">演讲模式</span>
+    </button>
+  </div>
+</header>
+<div class="scroll-progress"></div>
+
+<div class="layout">
+  <!-- ===== 页内目录 ===== -->
+  <aside class="sidebar">
+    <h4 data-i18n="toc">本页目录</h4>
+    <a href="#hero">① <span class="lang lang-zh">导览</span><span class="lang lang-ja">イントロ</span><span class="lang lang-en">Intro</span></a>
+    <a href="#map">② <span class="lang lang-zh">整体地图</span><span class="lang lang-ja">全体マップ</span><span class="lang lang-en">The Map</span></a>
+    <a href="#parts">③ <span class="lang lang-zh">三大部分</span><span class="lang lang-ja">3つの章</span><span class="lang lang-en">Three Parts</span></a>
+    <a href="#paths">④ <span class="lang lang-zh">观众路径</span><span class="lang lang-ja">受講ルート</span><span class="lang lang-en">Your Path</span></a>
+  </aside>
+
+  <!-- ===== 正文 ===== -->
+  <main class="content">
+
+    <!-- Hero -->
+    <section id="hero" class="section">
+      <div class="hero">
+        <span class="eyebrow">2026 · LLM × Software Development</span>
+        <h1>
+          <span class="lang lang-zh">生成 AI 应用于开发的全体像</span>
+          <span class="lang lang-ja">生成 AI 開発活用の全体像</span>
+          <span class="lang lang-en">The Big Picture of Generative AI in Development</span>
+        </h1>
+        <p class="lead">
+          <span class="lang lang-zh">从「怎么用 LLM」到「怎么定制 AI 工具」，再到「开发模式正在如何改变」——一条线讲清生成 AI 在开发与生产中的变迁、挑战与机遇。</span>
+          <span class="lang lang-ja">「LLM の使い方」から「AI ツールのカスタマイズ」、そして「開発スタイルの変化」まで。生成 AI が開発・生産にもたらす変遷・課題・機会を一本の線で整理します。</span>
+          <span class="lang lang-en">From "how to use an LLM" to "how to customize AI tools" to "how development itself is changing" — one throughline covering the shift, the challenges, and the opportunities.</span>
+        </p>
+        <div class="figure hero-img">
+          <img class="theme-dark" src="assets/img/hero-overview.png" alt="Humans collaborating with AI agents on software" data-ph="Hero 主视觉（gpt-image-2 生成）">
+          <img class="theme-light" src="assets/img/hero-overview-light.png" alt="Humans collaborating with AI agents on software" data-ph="Hero 主视觉 · 浅色">
+        </div>
+        <p class="muted" style="font-size:13px;margin-top:14px">
+          <span class="lang lang-zh">面向 IT 从业人员 · 适合初学者与有经验者 · 可自学浏览，也可直接用于演讲（点右上「演讲模式」）。</span>
+          <span class="lang lang-ja">IT 従事者向け · 初心者にも経験者にも · 自習にも、右上の「プレゼンモード」で講演にも。</span>
+          <span class="lang lang-en">For IT practitioners, beginner to experienced. Read it yourself, or hit "Present mode" (top-right) to give the talk.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 整体地图 -->
+    <section id="map" class="section">
+      <span class="eyebrow">The Map</span>
+      <h2 class="section-title"><span class="lang lang-zh">整体地图：三步看懂</span><span class="lang lang-ja">全体マップ：3 ステップ</span><span class="lang lang-en">The Map: Three Steps</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">本站沿着一条主线展开——先看「人怎么用 AI」，再看「怎么把 AI 工具调教成趁手的工具」，最后看「这一切如何重塑开发本身」。</span>
+        <span class="lang lang-ja">本サイトは一本の流れで構成されます——まず「人が AI をどう使うか」、次に「AI ツールをどう仕込むか」、最後に「それが開発そのものをどう変えるか」。</span>
+        <span class="lang lang-en">A single throughline: how people use AI, then how to shape AI tools into something dependable, then how all of it reshapes development itself.</span>
+      </p>
+      <div class="mermaid">
+flowchart LR
+    A["①  How to use LLMs<br/>Chat · API · Agent · CLI · IDE"]:::a
+    B["②  Customize &amp; Standards<br/>Rules · Skills · Hooks · MCP/A2A · Harness"]:::b
+    C["③  Shift &amp; Outlook<br/>Spec-driven · AgentOps · New roles"]:::c
+    A --> B --> C
+    classDef a stroke:#5b8cff,stroke-width:2px;
+    classDef b stroke:#b07bff,stroke-width:2px;
+    classDef c stroke:#2bd4d4,stroke-width:2px;
+      </div>
+    </section>
+
+    <!-- 三大部分 -->
+    <section id="parts" class="section">
+      <span class="eyebrow">Three Parts</span>
+      <h2 class="section-title"><span class="lang lang-zh">三大部分</span><span class="lang lang-ja">3 つの章</span><span class="lang lang-en">Three Parts</span></h2>
+      <div class="cards cols-3" style="margin-top:18px">
+        <a class="card entry-card" href="part1.html">
+          <span class="num">PART 1</span>
+          <h3><span class="lang lang-zh">LLM 的基础应用方式</span><span class="lang lang-ja">LLM の基本的な活用方法</span><span class="lang lang-en">Ways to Use LLMs</span></h3>
+          <p class="muted"><span class="lang lang-zh">Chat、API（含内置功能）、Agent、CLI、IDE 集成、持久化助手——六种形态与取舍。</span><span class="lang lang-ja">Chat、API（組込み機能含む）、Agent、CLI、IDE 統合、常駐アシスタント——6 形態と使い分け。</span><span class="lang lang-en">Chat, API (with built-in tools), Agent, CLI, IDE integration, persistent assistants — six modes and trade-offs.</span></p>
+        </a>
+        <a class="card entry-card" href="part2.html">
+          <span class="num">PART 2</span>
+          <h3><span class="lang lang-zh">定制与标准组成</span><span class="lang lang-ja">カスタマイズと標準構成</span><span class="lang lang-en">Customization &amp; Standards</span></h3>
+          <p class="muted"><span class="lang lang-zh">通用概念：rule、skill、command、hook、agent、MCP/A2A/ACP 协议，以及 Harness。</span><span class="lang lang-ja">汎用概念：rule、skill、command、hook、agent、MCP/A2A/ACP プロトコル、そして Harness。</span><span class="lang lang-en">Generic concepts: rule, skill, command, hook, agent, MCP/A2A/ACP protocols, and the Harness.</span></p>
+        </a>
+        <a class="card entry-card" href="part3.html">
+          <span class="num">PART 3</span>
+          <h3><span class="lang lang-zh">开发模式的改变与展望</span><span class="lang lang-ja">開発スタイルの変化と展望</span><span class="lang lang-en">Shift &amp; Outlook</span></h3>
+          <p class="muted"><span class="lang lang-zh">从 vibe coding 到规格驱动，Harness 工程、AgentOps，以及挑战与机遇。</span><span class="lang lang-ja">vibe coding から仕様駆動へ。Harness エンジニアリング、AgentOps、課題と機会。</span><span class="lang lang-en">From vibe coding to spec-driven development, harness engineering, AgentOps, challenges and opportunities.</span></p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 观众路径 -->
+    <section id="paths" class="section">
+      <span class="eyebrow">Your Path</span>
+      <h2 class="section-title"><span class="lang lang-zh">按经验选择路径</span><span class="lang lang-ja">経験に応じたルート</span><span class="lang lang-en">Pick a Path by Experience</span></h2>
+      <div class="cards cols-2" style="margin-top:18px">
+        <div class="card">
+          <span class="icon">🌱</span>
+          <h3><span class="lang lang-zh">初入门</span><span class="lang lang-ja">はじめての方</span><span class="lang lang-en">Newcomer</span></h3>
+          <p class="muted"><span class="lang lang-zh">从 Part 1 的 Chat / API / IDE 入手，跟着模拟 demo 建立直觉；先理解「人怎么用 AI」，暂时跳过协议细节。</span><span class="lang lang-ja">Part 1 の Chat / API / IDE から。デモで感覚を掴み、まず「人が AI をどう使うか」を理解。プロトコルの詳細は後回しで OK。</span><span class="lang lang-en">Start with Chat / API / IDE in Part 1, build intuition via the demos. Understand "how people use AI" first; skip protocol details for now.</span></p>
+        </div>
+        <div class="card">
+          <span class="icon">🚀</span>
+          <h3><span class="lang lang-zh">有经验者</span><span class="lang lang-ja">経験者の方</span><span class="lang lang-en">Experienced</span></h3>
+          <p class="muted"><span class="lang lang-zh">直接看 Part 1 的 Agent 内部细节与前沿小节，重点研读 Part 2 的 Harness 与 MCP/A2A/ACP，以及 Part 3 的规格驱动与 Harness 工程。</span><span class="lang lang-ja">Part 1 の Agent 内部・最前線、Part 2 の Harness と MCP/A2A/ACP、Part 3 の仕様駆動と Harness エンジニアリングを重点的に。</span><span class="lang lang-en">Jump to the agent internals and frontier notes in Part 1, study the Harness and MCP/A2A/ACP in Part 2, and spec-driven + harness engineering in Part 3.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p data-i18n="footer">教学演讲材料 · 静态站点 · 内容核实于 2026-05，带版本号/数字的条目请以最新官方信息为准。</p>
+    </footer>
+  </main>
+</div>
+
+<div class="present-hint"><span data-i18n="present.hint">方向键 / 空格 翻屏 · Esc 退出</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  if (!window.mermaid) return;
+  var blocks = [].slice.call(document.querySelectorAll(".mermaid"));
+  blocks.forEach(function (b) { b.dataset.src = b.textContent; });
+  function render() {
+    var light = document.documentElement.getAttribute("data-theme") === "light";
+    mermaid.initialize({ startOnLoad: false, theme: light ? "default" : "dark",
+      themeVariables: { fontFamily: "inherit", fontSize: "15px" }, flowchart: { curve: "basis" } });
+    blocks.forEach(function (b) { b.removeAttribute("data-processed"); b.innerHTML = b.dataset.src; });
+    try { mermaid.run({ nodes: blocks }); } catch (e) { try { mermaid.init(undefined, blocks); } catch (e2) {} }
+  }
+  render();
+  document.addEventListener("themechange", render);
+})();
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

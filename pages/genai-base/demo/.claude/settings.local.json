@@ -1,0 +1,9 @@
+{
+  "$comment": "ローカル層（.gitignore 対象の例）。個人の許可緩和やローカル専用設定を置く。チーム共有設定は settings.json。",
+  "permissions": {
+    "allow": [
+      "Bash(docker compose up:*)",
+      "Bash(docker compose down:*)"
+    ]
+  }
+}

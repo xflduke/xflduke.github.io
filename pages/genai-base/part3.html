@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 3 · 开发模式的改变与展望 | Shift &amp; Outlook</title>
+<meta name="description" content="生成 AI 之后开发模式的变迁：从 vibe coding 到规格驱动开发、Harness 工程、AgentOps，以及挑战与机遇。">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script>(function(){try{var d=document.documentElement,s=localStorage;var t=s.getItem('site_theme');if(t)d.setAttribute('data-theme',t);var f=s.getItem('site_fs');if(f)d.setAttribute('data-fs',f);var l=s.getItem('site_lang');if(l){d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':l);}}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" aria-label="menu">☰</button>
+  <span class="brand" data-i18n="brand">生成 AI × 开发 · 全体像</span>
+  <nav class="topnav">
+    <a href="index.html" data-i18n="nav.home">全体像</a>
+    <a href="part1.html" data-i18n="nav.part1">1 · 应用方式</a>
+    <a href="part2.html" data-i18n="nav.part2">2 · 定制与标准</a>
+    <a href="part3.html" class="active" data-i18n="nav.part3">3 · 变迁与展望</a>
+    <a href="demo.html" data-i18n="nav.demo">事例</a>
+    <a href="references.html" data-i18n="nav.refs">参照</a>
+  </nav>
+  <div class="topbar-tools">
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="zh">中</button><button data-lang="ja">日</button><button data-lang="en">EN</button>
+    </div>
+    <div class="lang-switch fs-switch" role="group" aria-label="font size">
+      <button data-fs="s" title="Small font">A</button><button data-fs="m" title="Medium font">A</button><button data-fs="l" title="Large font">A</button>
+    </div>
+    <button class="icon-btn theme-toggle" aria-label="toggle theme" title="Light / Dark">☀</button>
+    <button class="present-toggle" aria-pressed="false"><span class="dot"></span><span data-i18n="present.on">演讲模式</span></button>
+  </div>
+</header>
+<div class="scroll-progress"></div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4 data-i18n="toc">本页目录</h4>
+    <a href="#intro"><span class="lang lang-zh">概览</span><span class="lang lang-ja">概要</span><span class="lang lang-en">Overview</span></a>
+    <a href="#timeline"><span class="lang lang-zh">变迁时间线</span><span class="lang lang-ja">変遷タイムライン</span><span class="lang lang-en">Timeline</span></a>
+    <a href="#lifecycle"><span class="lang lang-zh">生命周期影响</span><span class="lang lang-ja">ライフサイクル</span><span class="lang lang-en">Lifecycle</span></a>
+    <a href="#sdd"><span class="lang lang-zh">vibe → 规格驱动</span><span class="lang lang-ja">vibe → 仕様駆動</span><span class="lang lang-en">vibe → SDD</span></a>
+    <a href="#agentops">AgentOps</a>
+    <a href="#harness-eng"><span class="lang lang-zh">Harness 工程</span><span class="lang lang-ja">Harness 工学</span><span class="lang lang-en">Harness Eng.</span></a>
+    <a href="#next"><span class="lang lang-zh">前瞻</span><span class="lang lang-ja">これから</span><span class="lang lang-en">What's Next</span></a>
+    <a href="#cm"><span class="lang lang-zh">挑战与机遇</span><span class="lang lang-ja">課題と機会</span><span class="lang lang-en">Challenges &amp; Opportunities</span></a>
+    <a href="#action"><span class="lang lang-zh">行动建议</span><span class="lang lang-ja">アクション</span><span class="lang lang-en">Action</span></a>
+  </aside>
+
+  <main class="content">
+
+    <section id="intro" class="section">
+      <span class="eyebrow">Part 3</span>
+      <h2 class="section-title"><span class="lang lang-zh">开发模式的改变与展望</span><span class="lang lang-ja">開発スタイルの変化と展望</span><span class="lang lang-en">The Shift &amp; the Outlook</span></h2>
+      <p class="lead"><span class="lang lang-zh">当编码不再是瓶颈，瓶颈转移到「说清楚要什么」和「确认它做对了」。这一章讲清这场转变，以及你该如何站位。</span><span class="lang lang-ja">コーディングがボトルネックでなくなると、要点は「何が欲しいかを明確にする」と「正しく出来たか確認する」へ移る。本章はこの転換とあなたの立ち位置を扱う。</span><span class="lang lang-en">When writing code stops being the bottleneck, the bottleneck moves to "stating what you want" and "confirming it's right." This chapter maps that shift — and where you fit in it.</span></p>
+      <div class="figure"><img class="theme-dark" src="assets/img/part3-shift.png" alt="From writing code to designing agent systems" data-ph="开发模式演进意象（gpt-image-2 生成）"><img class="theme-light" src="assets/img/part3-shift-light.png" alt="From writing code to designing agent systems" data-ph="开发模式演进意象 · 浅色"></div>
+    </section>
+
+    <section id="timeline" class="section">
+      <span class="eyebrow">Timeline</span>
+      <h2 class="section-title"><span class="lang lang-zh">变迁时间线</span><span class="lang lang-ja">変遷タイムライン</span><span class="lang lang-en">The Timeline</span></h2>
+      <div class="timeline">
+        <div class="tl-item"><span class="era">~2021</span><h4><span class="lang lang-zh">自动补全</span><span class="lang lang-ja">オートコンプリート</span><span class="lang lang-en">Autocomplete</span></h4><p class="muted"><span class="lang lang-zh">行内补全提速打字。</span><span class="lang lang-ja">インライン補完で入力を高速化。</span><span class="lang lang-en">Inline completion speeds up typing.</span></p></div>
+        <div class="tl-item"><span class="era">2023</span><h4><span class="lang lang-zh">对话辅助</span><span class="lang lang-ja">対話アシスト</span><span class="lang lang-en">Chat assist</span></h4><p class="muted"><span class="lang lang-zh">问答、解释、重构建议。</span><span class="lang lang-ja">Q&amp;A・説明・リファクタ提案。</span><span class="lang lang-en">Q&amp;A, explanation, refactor suggestions.</span></p></div>
+        <div class="tl-item"><span class="era">2024–25</span><h4><span class="lang lang-zh">半自治 Agent</span><span class="lang lang-ja">半自律 Agent</span><span class="lang lang-en">Semi-autonomous agents</span></h4><p class="muted"><span class="lang lang-zh">多步执行：读、改、跑、修。</span><span class="lang lang-ja">多段実行：読み・直し・実行・修正。</span><span class="lang lang-en">Multi-step: read, edit, run, fix.</span></p></div>
+        <div class="tl-item"><span class="era">2026 →</span><h4><span class="lang lang-zh">Agent 编队 / 持久化助手</span><span class="lang lang-ja">Agent 編隊 / 常駐</span><span class="lang lang-en">Agent fleets / persistent</span></h4><p class="muted"><span class="lang lang-zh">多 agent 协作、跨厂商互操作、长期记忆。</span><span class="lang lang-ja">マルチ agent 協調・跨ベンダー・長期記憶。</span><span class="lang lang-en">Multi-agent collaboration, cross-vendor interop, long-term memory.</span></p></div>
+      </div>
+    </section>
+
+    <section id="lifecycle" class="section">
+      <span class="eyebrow">Lifecycle Impact</span>
+      <h2 class="section-title"><span class="lang lang-zh">对开发生命周期的影响</span><span class="lang lang-ja">開発ライフサイクルへの影響</span><span class="lang lang-en">Impact Across the Lifecycle</span></h2>
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th><span class="lang lang-zh">环节</span><span class="lang lang-ja">工程</span><span class="lang lang-en">Stage</span></th>
+          <th><span class="lang lang-zh">变化</span><span class="lang lang-ja">変化</span><span class="lang lang-en">What changes</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td><span class="lang lang-zh">需求</span><span class="lang lang-ja">要件</span><span class="lang lang-en">Requirements</span></td><td><span class="lang lang-zh">写「规格」成为核心产物，自然语言即输入。</span><span class="lang lang-ja">「仕様」が中心成果物に。自然語が入力。</span><span class="lang lang-en">The "spec" becomes the core artifact; natural language is the input.</span></td></tr>
+          <tr><td><span class="lang lang-zh">编码</span><span class="lang lang-ja">実装</span><span class="lang lang-en">Coding</span></td><td><span class="lang lang-zh">大量代码由 agent 生成，人转向引导与审阅。</span><span class="lang lang-ja">多くを agent が生成、人は誘導とレビューへ。</span><span class="lang lang-en">Much code is agent-generated; humans shift to steering and reviewing.</span></td></tr>
+          <tr><td><span class="lang lang-zh">测试</span><span class="lang lang-ja">テスト</span><span class="lang lang-en">Testing</span></td><td><span class="lang lang-zh">测试/评测既是验证，也是给 agent 的反馈传感器。</span><span class="lang lang-ja">テスト/評価は検証であり agent へのフィードバックセンサー。</span><span class="lang lang-en">Tests/evals are both verification and a feedback sensor for the agent.</span></td></tr>
+          <tr><td><span class="lang lang-zh">评审</span><span class="lang lang-ja">レビュー</span><span class="lang lang-en">Review</span></td><td><span class="lang lang-zh">评审量激增——成为新的瓶颈与价值点。</span><span class="lang lang-ja">レビュー量が急増——新たなボトルネック兼価値。</span><span class="lang lang-en">Review volume explodes — the new bottleneck and value center.</span></td></tr>
+          <tr><td><span class="lang lang-zh">运维</span><span class="lang lang-ja">運用</span><span class="lang lang-en">Ops</span></td><td><span class="lang lang-zh">AgentOps：可观测、评测、治理贯穿全程。</span><span class="lang lang-ja">AgentOps：可観測・評価・ガバナンスを通貫。</span><span class="lang lang-en">AgentOps: observability, evals, governance throughout.</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- SDD 主线 -->
+    <section id="sdd" class="section">
+      <span class="eyebrow">The Core Thesis</span>
+      <h2 class="section-title"><span class="lang lang-zh">从 Vibe Coding 到规格驱动开发</span><span class="lang lang-ja">Vibe Coding から仕様駆動へ</span><span class="lang lang-en">From Vibe Coding to Spec-Driven Development</span></h2>
+      <div class="callout"><p style="margin:0"><span class="lang lang-zh">Karpathy 在 2025 年造了「vibe coding」（凭感觉提示），一年后他自己也说：这个时代正在落幕，进入「<b>agentic engineering</b>」——按详细规格编排 agent + 人监督。</span><span class="lang lang-ja">Karpathy が 2025 年に「vibe coding」を造語。1 年後に本人が、その時代は終わりつつあり「<b>agentic engineering</b>」（詳細な仕様で agent を編成 + 人の監督）へ入ると述べた。</span><span class="lang lang-en">Karpathy coined "vibe coding" in 2025; a year later he said the era is ending, giving way to "<b>agentic engineering</b>" — orchestrating agents against detailed specs with human oversight.</span></p></div>
+      <div class="cards cols-2">
+        <div class="card"><h3>Spec-Driven Development</h3>
+          <p class="muted"><span class="lang lang-zh">规格＝主权文档。循环：<code>Spec → Plan → Tasks → Implement</code>。规格是「实现的来源、验证的标准、治理的依据」。</span><span class="lang lang-ja">仕様＝主権文書。ループ：<code>Spec → Plan → Tasks → Implement</code>。仕様が実装の源・検証基準・統治根拠。</span><span class="lang lang-en">The spec is the sovereign document. Loop: <code>Spec → Plan → Tasks → Implement</code>. The spec is the source of implementation, the bar for verification, the basis for governance.</span></p></div>
+        <div class="card"><h3><span class="lang lang-zh">解决两大失效</span><span class="lang lang-ja">2 つの失敗を解決</span><span class="lang lang-en">Fixes two failure modes</span></h3>
+          <p class="muted"><span class="lang lang-zh"><b>Intent drift</b>：「加个登录」严重欠定义，模型挑的默认值常常不对。<br><b>Context decay</b>：代码库超出上下文窗口后，agent 遗忘旧决策、自相矛盾。</span><span class="lang lang-ja"><b>Intent drift</b>：「ログイン追加」は曖昧で既定値がずれる。<br><b>Context decay</b>：文脈窓を超えると旧決定を忘れ矛盾する。</span><span class="lang lang-en"><b>Intent drift</b>: "add login" is wildly underspecified; defaults rarely match intent.<br><b>Context decay</b>: past the context window, the agent forgets old decisions and contradicts itself.</span></p></div>
+      </div>
+      <p class="muted" style="font-size:13px"><span class="lang lang-zh">生态（仅类别列举，不推荐特定项目）：GitHub Spec Kit、AWS Kiro、Cursor、OpenSpec、BMAD、Tessl、Google Antigravity… 30+ 框架。</span><span class="lang lang-ja">エコシステム（種類の列挙、特定推奨ではない）：Spec Kit、Kiro、Cursor、OpenSpec、BMAD、Tessl、Antigravity… 30+。</span><span class="lang lang-en">Ecosystem (categories, not endorsements): GitHub Spec Kit, AWS Kiro, Cursor, OpenSpec, BMAD, Tessl, Google Antigravity… 30+ frameworks.</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">vibe coding＝凭感觉随手搭违建；SDD＝先出施工图再施工。开发者从「砌砖工」转为「建筑师 + 监理」。</span><span class="lang lang-ja">vibe coding＝感覚で建てる無許可建築；SDD＝図面を引いてから施工。開発者は「煉瓦工」から「建築家＋監理」へ。</span><span class="lang lang-en">Vibe coding = winging an unpermitted build; SDD = draw the blueprint first. The developer shifts from bricklayer to architect + inspector.</span></div>
+    </section>
+
+    <section id="agentops" class="section">
+      <span class="eyebrow">AgentOps / LLMOps</span>
+      <h2 class="section-title"><span class="lang lang-zh">AgentOps：把 agent 运营起来</span><span class="lang lang-ja">AgentOps：agent を運用する</span><span class="lang lang-en">AgentOps: Operating Agents</span></h2>
+      <p class="lead"><span class="lang lang-zh">可观测、评测、治理、版本化贯穿 agent 全生命周期；AG-UI 让「看见 agent 思考」成为前端标配。</span><span class="lang lang-ja">可観測・評価・ガバナンス・バージョン管理を agent の全生涯に。AG-UI で「思考の可視化」が標準に。</span><span class="lang lang-en">Observability, evals, governance, versioning across the agent lifecycle; AG-UI makes "watch the agent think" a frontend default.</span></p>
+      <div class="cards cols-3">
+        <div class="card"><h3>👁 <span class="lang lang-zh">可观测</span><span class="lang lang-ja">可観測</span><span class="lang lang-en">Observability</span></h3><p class="muted">OpenTelemetry · Langfuse · Arize</p></div>
+        <div class="card"><h3>📊 Evals</h3><p class="muted"><span class="lang lang-zh">全轨迹评测、回归基线。</span><span class="lang lang-ja">全軌跡評価・回帰基準。</span><span class="lang lang-en">Trajectory evals, regression baselines.</span></p></div>
+        <div class="card"><h3>🛡 <span class="lang lang-zh">治理</span><span class="lang lang-ja">ガバナンス</span><span class="lang lang-en">Governance</span></h3><p class="muted"><span class="lang lang-zh">权限、审批、审计、版本化。</span><span class="lang lang-ja">権限・承認・監査・版管理。</span><span class="lang lang-en">Permissions, approvals, audit, versioning.</span></p></div>
+      </div>
+      <div class="callout tip"><span class="lang lang-zh"><b>标准化趋势：</b>MCP / A2A / ACP / AG-UI 走向 Linux Foundation 开放治理与融合——「多 agent、多厂商互操作」正成为生产基础设施。</span><span class="lang lang-ja"><b>標準化の潮流：</b>MCP / A2A / ACP / AG-UI が Linux Foundation の下で融合——「マルチ agent・跨ベンダー相互運用」が本番基盤に。</span><span class="lang lang-en"><b>Standardization trend:</b> MCP / A2A / ACP / AG-UI converge under Linux Foundation governance — multi-agent, multi-vendor interop is becoming production infrastructure.</span></div>
+    </section>
+
+    <section id="harness-eng" class="section">
+      <span class="eyebrow">A New Discipline</span>
+      <h2 class="section-title"><span class="lang lang-zh">Harness 工程：新的工程学科</span><span class="lang lang-ja">Harness エンジニアリング：新しい工学</span><span class="lang lang-en">Harness Engineering: A New Discipline</span></h2>
+      <p class="lead"><span class="lang lang-zh">承接 Part 2：当 agent 产出代码的速度超过人类评审速度，可靠性就来自<b>精心设计的 harness</b>——约束、反馈回路、传感器、护栏、记忆与权限。</span><span class="lang lang-ja">Part 2 から：agent の生成速度が人のレビュー速度を超えると、信頼性は<b>緻密に設計された harness</b>から生まれる——制約・フィードバックループ・センサー・ガードレール・記憶・権限。</span><span class="lang lang-en">From Part 2: when agents emit code faster than humans can review, reliability comes from a <b>well-designed harness</b> — constraints, feedback loops, sensors, guardrails, memory, permissions.</span></p>
+      <div class="callout"><p style="margin:0"><span class="lang lang-zh">工程师的重心从「写代码」转向「<b>设计治理 agent 如何写代码的系统</b>」。作用：抑制架构漂移、统一安全/合规、用确定性约束替代概率性合规。由此产生新角色：harness / 平台工程。</span><span class="lang lang-ja">エンジニアの重心は「コードを書く」から「<b>agent のコード生成を統治するシステムを設計する</b>」へ。効果：アーキ漂移の抑制、安全/コンプラの統一、確率的遵守を決定的制約に置換。新役割：harness / プラットフォーム工学。</span><span class="lang lang-en">The engineer's focus shifts from writing code to <b>designing the systems that govern how agents write code</b>. It curbs architecture drift, unifies security/compliance, and replaces probabilistic compliance with deterministic constraints — spawning new roles in harness/platform engineering.</span></p></div>
+      <p class="muted" style="font-size:13px"><span class="lang lang-zh">业界论述：Martin Fowler、Thoughtworks、Augment Code 等。</span><span class="lang lang-ja">業界の議論：Martin Fowler、Thoughtworks、Augment Code 等。</span><span class="lang lang-en">Industry writing: Martin Fowler, Thoughtworks, Augment Code, etc.</span></p>
+    </section>
+
+    <!-- 前瞻 -->
+    <section id="next" class="section">
+      <span class="eyebrow">What's Next</span>
+      <h2 class="section-title"><span class="lang lang-zh">前瞻：最新工程实践</span><span class="lang lang-ja">これから：最新の工学実践</span><span class="lang lang-en">Emerging Engineering Applications</span></h2>
+      <div class="cards cols-2">
+        <div class="card"><h3>🛰 <span class="lang lang-zh">Agent 编排平台 / 编队</span><span class="lang lang-ja">Agent オーケストレーション / 編隊</span><span class="lang lang-en">Orchestration / fleets</span></h3>
+          <p class="muted"><span class="lang lang-zh">把多个各自带 harness 的 agent 当单元来调度（编排 ≠ harness）。</span><span class="lang lang-ja">各自 harness を持つ複数 agent をユニットとして調停（orchestration ≠ harness）。</span><span class="lang lang-en">Schedule many agents (each with its own harness) as units — orchestration, a layer above the harness.</span></p></div>
+        <div class="card"><h3>🏭 <span class="lang lang-zh">后台自治 agent</span><span class="lang lang-ja">バックグラウンド自律 agent</span><span class="lang lang-en">Background / "dark factory" agents</span></h3>
+          <p class="muted"><span class="lang lang-zh">在 CI/后台无人值守地跑：修 bug、升依赖、迁移遗留代码。</span><span class="lang lang-ja">CI/裏で無人実行：バグ修正・依存更新・レガシー移行。</span><span class="lang lang-en">Run unattended in CI/background: fix bugs, bump deps, migrate legacy code.</span></p></div>
+        <div class="card"><h3>🔎 <span class="lang lang-zh">Agentic retrieval + 混合记忆</span><span class="lang lang-ja">Agentic retrieval + ハイブリッド記憶</span><span class="lang lang-en">Agentic retrieval + hybrid memory</span></h3>
+          <p class="muted"><span class="lang lang-zh">检索/记忆从「向量库」升级为基础设施：向量+图+全文+知识图谱。</span><span class="lang lang-ja">検索/記憶が「ベクトル DB」から基盤へ：ベクトル+グラフ+全文+知識グラフ。</span><span class="lang lang-en">Retrieval/memory graduates from "a vector DB" to infrastructure: vector + graph + full-text + knowledge graph.</span></p></div>
+        <div class="card"><h3>📐 <span class="lang lang-zh">规格驱动流水线 + Eval 平台</span><span class="lang lang-ja">仕様駆動パイプライン + Eval 基盤</span><span class="lang lang-en">Spec-driven pipelines + eval platforms</span></h3>
+          <p class="muted"><span class="lang lang-zh">spec → 计划 → 任务 → 实现 接入 CI；eval/harness 平台化、可观测化。</span><span class="lang lang-ja">spec → 計画 → タスク → 実装 を CI に；eval/harness の基盤化・可観測化。</span><span class="lang lang-en">spec → plan → tasks → implement wired into CI; eval/harness as observable platforms.</span></p></div>
+      </div>
+    </section>
+
+    <!-- 挑战与机遇 -->
+    <section id="cm" class="section">
+      <span class="eyebrow">Challenges &amp; Opportunities</span>
+      <h2 class="section-title"><span class="lang lang-zh">挑战与机遇</span><span class="lang lang-ja">課題と機会</span><span class="lang lang-en">Challenges &amp; Opportunities</span></h2>
+      <div class="cards cols-2">
+        <div class="card" style="border-color:rgba(255,107,129,.4)">
+          <h3>⚠ <span class="lang lang-zh">挑战</span><span class="lang lang-ja">課題</span><span class="lang lang-en">Challenges</span></h3>
+          <ul class="muted">
+            <li><span class="lang lang-zh">质量与幻觉</span><span class="lang lang-ja">品質とハルシネーション</span><span class="lang lang-en">quality &amp; hallucination</span></li>
+            <li><span class="lang lang-zh">安全：密钥 / 供应链 / 越权</span><span class="lang lang-ja">セキュリティ：鍵 / サプライチェーン / 越権</span><span class="lang lang-en">security: secrets / supply chain / over-permission</span></li>
+            <li><span class="lang lang-zh">评审负担激增</span><span class="lang lang-ja">レビュー負担の急増</span><span class="lang lang-en">review-load explosion</span></li>
+            <li><span class="lang lang-zh">技能演变与成本</span><span class="lang lang-ja">スキル変化とコスト</span><span class="lang lang-en">skill shift &amp; cost</span></li>
+            <li><span class="lang lang-zh">治理与合规</span><span class="lang lang-ja">ガバナンスとコンプラ</span><span class="lang lang-en">governance &amp; compliance</span></li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(67,209,138,.4)">
+          <h3>✦ <span class="lang lang-zh">机遇</span><span class="lang lang-ja">機会</span><span class="lang lang-en">Opportunities</span></h3>
+          <ul class="muted">
+            <li><span class="lang lang-zh">生产力跃升</span><span class="lang lang-ja">生産性の飛躍</span><span class="lang lang-en">productivity leap</span></li>
+            <li><span class="lang lang-zh">降低门槛、人人可造</span><span class="lang lang-ja">障壁低下、誰もが作れる</span><span class="lang lang-en">lower barrier, build for all</span></li>
+            <li><span class="lang lang-zh">新角色：harness / 平台 / 规格</span><span class="lang lang-ja">新役割：harness / プラットフォーム / 仕様</span><span class="lang lang-en">new roles: harness / platform / spec</span></li>
+            <li><span class="lang lang-zh">遗留系统现代化</span><span class="lang lang-ja">レガシー近代化</span><span class="lang lang-en">legacy modernization</span></li>
+            <li><span class="lang lang-zh">从执行者到设计者</span><span class="lang lang-ja">実行者から設計者へ</span><span class="lang lang-en">from doer to designer</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 行动建议 -->
+    <section id="action" class="section">
+      <span class="eyebrow">Take Action</span>
+      <h2 class="section-title"><span class="lang lang-zh">行动建议（按经验分层）</span><span class="lang lang-ja">アクション（経験別）</span><span class="lang lang-en">What To Do Next (by level)</span></h2>
+      <div class="cards cols-3">
+        <div class="card"><h3>🌱 <span class="lang lang-zh">初学者</span><span class="lang lang-ja">初心者</span><span class="lang lang-en">Beginner</span></h3>
+          <p class="muted"><span class="lang lang-zh">每天用 Chat + IDE 补全建立直觉；学会写清楚需求。</span><span class="lang lang-ja">毎日 Chat + IDE 補完で感覚を作る；要件を明確に書く練習。</span><span class="lang lang-en">Use Chat + IDE completion daily to build intuition; practice writing clear requirements.</span></p></div>
+        <div class="card"><h3>🚀 <span class="lang lang-zh">进阶者</span><span class="lang lang-ja">中級者</span><span class="lang lang-en">Intermediate</span></h3>
+          <p class="muted"><span class="lang lang-zh">给项目写 rule / skill / hook；试规格驱动；建立 eval。</span><span class="lang lang-ja">rule / skill / hook を整備；仕様駆動を試す；eval を作る。</span><span class="lang lang-en">Add rules/skills/hooks to your repo; try spec-driven; set up evals.</span></p></div>
+        <div class="card"><h3>🏗 <span class="lang lang-zh">团队 / Lead</span><span class="lang lang-ja">チーム / Lead</span><span class="lang lang-en">Team / Lead</span></h3>
+          <p class="muted"><span class="lang lang-zh">投资 harness 与 AgentOps；定治理与权限；规划多 agent 互操作。</span><span class="lang lang-ja">harness と AgentOps に投資；ガバナンス/権限を定義；マルチ agent 相互運用を計画。</span><span class="lang lang-en">Invest in harness &amp; AgentOps; define governance/permissions; plan for multi-agent interop.</span></p></div>
+      </div>
+      <p style="margin-top:22px"><a href="references.html" class="btn" style="text-decoration:none"><span class="lang lang-zh">查看具体参照 →</span><span class="lang lang-ja">参照を見る →</span><span class="lang lang-en">See references →</span></a></p>
+    </section>
+
+    <footer class="footer"><p data-i18n="footer">教学演讲材料 · 静态站点 · 内容核实于 2026-05，带版本号/数字的条目请以最新官方信息为准。</p></footer>
+  </main>
+</div>
+
+<div class="present-hint"><span data-i18n="present.hint">方向键 / 空格 翻屏 · Esc 退出</span></div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

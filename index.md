@@ -13,6 +13,7 @@
   - [linux course3(linux as a service)](https://xflduke.github.io/pages/linuxPres/linux3/index.html)
   - [linux course2(command editor and bash)](https://xflduke.github.io/pages/linuxPres/linux2/index.html)
   - [LPICについて](https://xflduke.github.io/pages/linuxPres/lpic/index.html)
+  - [GenAI基礎](https://xflduke.github.io/pages/genai-base/index.html)
 
 - Tools
   - [DeviceResolution](https://xflduke.github.io/pages/screenResolution/index.html)

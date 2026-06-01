@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Study · OPSM Harness 工程贯穿 | Generative AI for Software Development</title>
+<meta name="description" content="harness（feed-forward + feedback）が要件→設計→実装→テスト→レビュー→CI/デプロイ→運用の全フェーズで品質を担保する流れを、汎用オンプレ販売管理システム（OPSM）で示す教育用ケーススタディ。">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script>(function(){try{var d=document.documentElement,s=localStorage;var t=s.getItem('site_theme');if(t)d.setAttribute('data-theme',t);var f=s.getItem('site_fs');if(f)d.setAttribute('data-fs',f);var l=s.getItem('site_lang');if(l){d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':l);}}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ===== 顶栏 ===== -->
+<header class="topbar">
+  <button class="menu-toggle" aria-label="menu">☰</button>
+  <span class="brand" data-i18n="brand">生成 AI × 开发 · 全体像</span>
+  <nav class="topnav">
+    <a href="index.html" data-i18n="nav.home">全体像</a>
+    <a href="part1.html" data-i18n="nav.part1">1 · 应用方式</a>
+    <a href="part2.html" data-i18n="nav.part2">2 · 定制与标准</a>
+    <a href="part3.html" data-i18n="nav.part3">3 · 变迁与展望</a>
+    <a href="demo.html" class="active" data-i18n="nav.demo">事例</a>
+    <a href="references.html" data-i18n="nav.refs">参照</a>
+  </nav>
+  <div class="topbar-tools">
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="zh">中</button>
+      <button data-lang="ja">日</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <div class="lang-switch fs-switch" role="group" aria-label="font size">
+      <button data-fs="s" title="Small font">A</button><button data-fs="m" title="Medium font">A</button><button data-fs="l" title="Large font">A</button>
+    </div>
+    <button class="icon-btn theme-toggle" aria-label="toggle theme" title="Light / Dark">☀</button>
+    <button class="present-toggle" aria-pressed="false">
+      <span class="dot"></span><span data-i18n="present.on">演讲模式</span>
+    </button>
+  </div>
+</header>
+<div class="scroll-progress"></div>
+
+<div class="layout">
+  <!-- ===== 页内目录 ===== -->
+  <aside class="sidebar">
+    <h4 data-i18n="toc">本页目录</h4>
+    <a href="#hero">① <span class="lang lang-zh">导览</span><span class="lang lang-ja">イントロ</span><span class="lang lang-en">Intro</span></a>
+    <a href="#tour">★ <span class="lang lang-zh">5 分速读</span><span class="lang lang-ja">5 分ツアー</span><span class="lang lang-en">5-min Tour</span></a>
+    <a href="#notes">② <span class="lang lang-zh">两点说明</span><span class="lang lang-ja">2 つの注意</span><span class="lang lang-en">Two Notes</span></a>
+    <a href="#harness">③ <span class="lang lang-zh">harness 是这套定制</span><span class="lang lang-ja">harness とは</span><span class="lang lang-en">Harness Files</span></a>
+    <a href="#coverage">④ <span class="lang lang-zh">定制技术覆盖</span><span class="lang lang-ja">技術カバレッジ</span><span class="lang lang-en">Coverage</span></a>
+    <a href="#placement">⑤ <span class="lang lang-zh">辅助资料放哪里</span><span class="lang lang-ja">参照の置き場所</span><span class="lang lang-en">Where to Put Refs</span></a>
+    <a href="#phases">⑥ <span class="lang lang-zh">阶段 × harness</span><span class="lang lang-ja">フェーズ × harness</span><span class="lang lang-en">Phases × Harness</span></a>
+    <a href="#roles">⑥a <span class="lang lang-zh">人 vs harness</span><span class="lang lang-ja">人 vs harness</span><span class="lang lang-en">Human vs Harness</span></a>
+    <a href="#failures">⑥b <span class="lang lang-zh">失败模式</span><span class="lang lang-ja">失敗パターン</span><span class="lang lang-en">Failure Modes</span></a>
+    <a href="#order">⑦ <span class="lang lang-zh">受注贯通证据链</span><span class="lang lang-ja">受注の貫通</span><span class="lang lang-en">Order Throughline</span></a>
+    <a href="#deploy">⑧ <span class="lang lang-zh">on-prem 部署</span><span class="lang lang-ja">オンプレ デプロイ</span><span class="lang lang-en">On-Prem Deploy</span></a>
+    <a href="#gap">⑧a <span class="lang lang-zh">实工程 gap</span><span class="lang lang-ja">実工程との差分</span><span class="lang lang-en">Reality Gap</span></a>
+    <a href="#wrap">⑨ <span class="lang lang-zh">要点总结</span><span class="lang lang-ja">まとめ</span><span class="lang lang-en">Wrap-up</span></a>
+    <a href="#future">⑩ <span class="lang lang-zh">未来展望</span><span class="lang lang-ja">次世代の展望</span><span class="lang lang-en">Future Outlook</span></a>
+  </aside>
+
+  <!-- ===== 正文 ===== -->
+  <main class="content">
+
+    <!-- Hero + 免责声明 -->
+    <section id="hero" class="section">
+      <div class="hero">
+        <span class="eyebrow">Case Study · OPSM (On-Prem Sales Management)</span>
+        <h1>
+          <span class="lang lang-zh">harness 工程贯穿全 SDLC</span>
+          <span class="lang lang-ja">harness エンジニアリングで SDLC を貫く</span>
+          <span class="lang lang-en">Harness Engineering Across the Full SDLC</span>
+        </h1>
+        <p class="lead">
+          <span class="lang lang-zh">在「定制 Claude Code」之上，给 LLM 套上一整套 harness（feed-forward 规则/技能/规格 + feedback 传感器 lint/test/review/CI），让<strong>每个阶段都被强制遵守</strong>——这才是「保证效果」的来源。本案例以一套<strong>通用的、匿名的</strong>オンプレ販売管理系统（OPSM）为载体演示。</span>
+          <span class="lang lang-ja">「Claude Code をカスタマイズ」した上で、LLM に harness（feed-forward：ルール/技能/仕様 ＋ feedback：lint/test/review/CI）を被せ、<strong>各フェーズで強制遵守</strong>する。これが「効果を担保する」根拠。本事例は<strong>汎用・匿名</strong>のオンプレ販売管理システム（OPSM）で示す。</span>
+          <span class="lang lang-en">On top of "customizing Claude Code," we wrap a full harness (feed-forward rules/skills/specs + feedback sensors lint/test/review/CI) around the LLM so that <strong>every phase is enforced</strong>. This is where "guaranteed effect" comes from. The case is illustrated with a <strong>generic, anonymous</strong> on-prem sales management system (OPSM).</span>
+        </p>
+        <div class="callout" style="border-left:4px solid var(--c-warn,#e0a800);padding:12px 16px;margin-top:14px;background:rgba(224,168,0,.06);border-radius:6px">
+          <p class="muted" style="margin:0">
+            <span class="lang lang-zh"><strong>免责声明：</strong>本案例为通用販売管理ドメインの教学样本，与任何特定产品或服务无关。所有名称/接口/数据均为虚构。</span>
+            <span class="lang lang-ja"><strong>免責：</strong>本デモは一般的な販売管理ドメインの教育用サンプルであり、特定の製品・サービスとは一切関係ありません。名称・インタフェース・データは全て架空です。</span>
+            <span class="lang lang-en"><strong>Disclaimer:</strong> This is an educational sample of a generic sales-management domain. It is unrelated to any specific product or service. All names, interfaces and data are fictional.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5-min Tour -->
+    <section id="tour" class="section">
+      <span class="eyebrow">★ 5-min Tour</span>
+      <h2 class="section-title"><span class="lang lang-zh">5 分速读路线</span><span class="lang lang-ja">5 分ツアー</span><span class="lang lang-en">5-Minute Tour</span></h2>
+      <div class="callout" style="border-left:4px solid var(--c-accent,#5b8cff);padding:12px 16px;background:rgba(91,140,255,.06);border-radius:6px">
+        <p style="margin:.2em 0">
+          <span class="lang lang-zh"><strong>时间紧的话，按这条线走：</strong> ② 两点说明 → ③ harness 文件长啥样 → ⑥ 阶段对照 → ⑦ 受注贯通证据 → ⑧a 实工程 gap → ⑨ 总结。</span>
+          <span class="lang lang-ja"><strong>急ぎなら：</strong> ② 注意 → ③ harness のファイル形 → ⑥ フェーズ対照 → ⑦ 受注貫通 → ⑧a 実工程ギャップ → ⑨ まとめ。</span>
+          <span class="lang lang-en"><strong>If pressed:</strong> ② notes → ③ what harness files look like → ⑥ phases → ⑦ order throughline → ⑧a reality gap → ⑨ wrap-up.</span>
+        </p>
+        <p class="muted" style="margin:.4em 0 0">
+          <span class="lang lang-zh">Part 2 中确立的 <strong>scaffolding ≠ harness ≠ orchestration</strong> 三层概念在本案例集中体现"<em>harness 那一层</em>"——即包裹单一 agent 的运行时循环 + 它驱动的钩子/技能/规格。</span>
+          <span class="lang lang-ja">Part 2 で確立した <strong>scaffolding ≠ harness ≠ orchestration</strong> の三層のうち、本事例は<em>harness 層</em>に集中：単一 agent を包む実行時ループ ＋ それが駆動するフック/技能/仕様。</span>
+          <span class="lang lang-en">Of the three layers from Part 2 (<strong>scaffolding ≠ harness ≠ orchestration</strong>), this case focuses on the <em>harness layer</em> — the runtime loop wrapping a single agent plus the hooks/skills/specs it drives.</span>
+          <a href="part2.html#harness" style="margin-left:.4em">→ Part 2 §harness</a>
+        </p>
+      </div>
+    </section>
+    <section id="notes" class="section">
+      <span class="eyebrow">Two Notes Up Front</span>
+      <h2 class="section-title"><span class="lang lang-zh">先讲两点</span><span class="lang lang-ja">最初に 2 つ</span><span class="lang lang-en">Two Things First</span></h2>
+      <div class="cards cols-2">
+        <div class="card">
+          <h3>① <span class="lang lang-zh">技术栈是「预设」</span><span class="lang lang-ja">技術スタックは"仮置き"</span><span class="lang lang-en">The Stack is a Placeholder</span></h3>
+          <p class="muted">
+            <span class="lang lang-zh">Python / FastAPI / PostgreSQL 只是为演示流程随意选的组合。<strong>真实项目应在动工前与 AI 协作</strong>，依据团队技能、既有系统、合规、运维约束<strong>共同选型</strong>——这一步本身也是 harness 的一环。</span>
+            <span class="lang lang-ja">Python / FastAPI / PostgreSQL は流れを見せるために選んだだけ。<strong>実プロジェクトでは着手前に AI と相談し</strong>、チーム技能・既存資産・コンプラ・運用制約に応じて<strong>共同で選定</strong>する——選定自体が harness の一部。</span>
+            <span class="lang lang-en">Python / FastAPI / PostgreSQL is just a convenient combo for demonstration. <strong>Real projects must consult AI up front</strong> and pick the stack <strong>jointly</strong> based on skills, legacy assets, compliance, and ops constraints — that decision is itself part of the harness.</span>
+          </p>
+        </div>
+        <div class="card">
+          <h3>② <span class="lang lang-zh">本工程是「简版」</span><span class="lang lang-ja">本工程は"簡略版"</span><span class="lang lang-en">This Sample is Trimmed</span></h3>
+          <p class="muted">
+            <span class="lang lang-zh">harness 件齐全但内容是<strong>简版</strong>（规约 / 清单 / 观点都精简）。<strong>真实工程应按团队 process</strong>（评审流程、合规、分支策略、发布节奏、审批等）适当扩充。</span>
+            <span class="lang lang-ja">harness 一式は揃えたが内容は<strong>簡略版</strong>（規約・チェックリスト・観点はいずれも精錬）。<strong>実工程は各社 process</strong>（レビュー手順・分岐戦略・リリース・承認 等）に合わせて拡張すること。</span>
+            <span class="lang lang-en">All harness pieces are present but their content is <strong>trimmed</strong>. <strong>Real projects must extend them</strong> to match each team's process (reviews, branches, releases, approvals, compliance).</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- harness = 这套定制文件 -->
+    <section id="harness" class="section">
+      <span class="eyebrow">Harness = These Files</span>
+      <h2 class="section-title"><span class="lang lang-zh">harness = 这套定制文件</span><span class="lang lang-ja">harness = この一連の定義ファイル</span><span class="lang lang-en">Harness = This Set of Files</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">下面的全部文件都在 <code>demo/</code> 中真实存在，可点开查看。它们组成 LLM 看不到却必须遵守的「轨道」。</span>
+        <span class="lang lang-ja">以下のファイルはすべて <code>demo/</code> に実在し、参照可能。LLM からは見えなくても従わざるを得ない"レール"を構成する。</span>
+        <span class="lang lang-en">All files below actually live in <code>demo/</code>. They form the rails that the LLM cannot see but cannot escape.</span>
+      </p>
+
+      <h3><span class="lang lang-zh">权威规则（每轮必加载）</span><span class="lang lang-ja">権威ルール（毎ターン読込）</span><span class="lang lang-en">Authoritative rules (loaded every turn)</span></h3>
+      <pre><code># demo/AGENTS.md（抜粋）
+## オンプレミス制約（厳守）
+- **外部 SaaS / クラウド API を呼ばない**。データは構内に留める。
+- **秘密情報は環境変数 / `.env`** から取得。**ハードコード禁止**。
+- 依存は許可リスト方式。外部ネットワーク egress は原則遮断（hook で検査）。
+
+## ワークフロー（spec-driven）
+1. **承認済み仕様が無いコードは書かない**。まず `/spec`。
+2. 順序：`/spec` → `/design` → `/implement` → `/test` → `/review` → `/deploy`。</code></pre>
+
+      <h3><span class="lang lang-zh">斜杠命令（流程固化）</span><span class="lang lang-ja">スラッシュコマンド（流れの固定化）</span><span class="lang lang-en">Slash commands (frozen flow)</span></h3>
+      <pre><code># demo/.claude/commands/implement.md（frontmatter）
+---
+description: 承認済み仕様に基づいて実装する（実装フェーズ）
+argument-hint: &lt;仕様パス 例: docs/specs/order.md&gt;
+allowed-tools: Read, Write, Edit, Bash(ruff:*), Bash(mypy:*)
+model: claude-opus-4-8
+---</code></pre>
+
+      <h3><span class="lang lang-zh">钩子（feedback 传感器）</span><span class="lang lang-ja">フック（feedback センサー）</span><span class="lang lang-en">Hooks (feedback sensors)</span></h3>
+      <pre><code># demo/.claude/hooks/no-external-net.sh（抜粋）
+if printf '%s' "$cmd" | grep -Eq '(curl|wget|nc|ssh|scp|pip[0-9]* +install|npm +install)'; then
+  if printf '%s' "$cmd" | grep -Eqv '(localhost|127\.0\.0\.1|::1|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)'; then
+    echo "[no-external-net] オンプレ制約：外部ネットワークへの接続は禁止です → $cmd" &gt;&amp;2
+    exit 2   # ← Claude Code はこのコマンドを実行できない
+  fi
+fi</code></pre>
+
+      <h3><span class="lang lang-zh">设置 / 权限（护栏）</span><span class="lang lang-ja">設定 / 権限（ガードレール）</span><span class="lang lang-en">Settings / permissions (guardrails)</span></h3>
+      <pre><code>// demo/.claude/settings.json（抜粋）
+"permissions": {
+  "allow": ["Bash(ruff:*)", "Bash(mypy:*)", "Bash(pytest:*)", "Bash(docker compose:*)"],
+  "deny":  ["WebFetch", "Bash(curl:*)", "Bash(wget:*)", "Bash(pip install:*)",
+            "Read(./.env)", "Read(./**/.env)"],
+  "ask":   ["Bash(rm:*)", "Bash(docker:*)", "Bash(git push:*)"]
+}</code></pre>
+
+      <h3><span class="lang lang-zh">类比（一句话理解）</span><span class="lang lang-ja">アナロジー（一言で）</span><span class="lang lang-en">Analogies</span></h3>
+      <div class="cards cols-3">
+        <div class="card"><h4>AGENTS.md / CLAUDE.md</h4><p class="muted">
+          <span class="lang lang-zh">📜 工地<strong>安全须知</strong>：每个工人入场都要先读。</span>
+          <span class="lang lang-ja">📜 工事現場の<strong>安全ルール</strong>：入場前に必ず読む。</span>
+          <span class="lang lang-en">📜 Site <strong>safety rules</strong> — read on every entry.</span>
+        </p></div>
+        <div class="card"><h4>hooks (PreToolUse/PostToolUse)</h4><p class="muted">
+          <span class="lang lang-zh">🛑 流水线上的<strong>自动急停按钮</strong>：异物即触发停车。</span>
+          <span class="lang lang-ja">🛑 ライン上の<strong>自動非常停止</strong>：異常で即停止。</span>
+          <span class="lang lang-en">🛑 Conveyor <strong>e-stop</strong> — trips on anomalies.</span>
+        </p></div>
+        <div class="card"><h4>subagents</h4><p class="muted">
+          <span class="lang lang-zh">👷 各工种<strong>专科师傅</strong>：钢筋、电气、防水各管各的。</span>
+          <span class="lang lang-ja">👷 工種別の<strong>専門職</strong>：鉄筋・電気・防水で分業。</span>
+          <span class="lang lang-en">👷 Trade <strong>specialists</strong> — rebar, electrical, waterproofing.</span>
+        </p></div>
+        <div class="card"><h4>skills + references</h4><p class="muted">
+          <span class="lang lang-zh">📚 工具箱里的<strong>厚清单</strong>：要用时再翻，不背在脑里。</span>
+          <span class="lang lang-ja">📚 工具箱の<strong>厚いチェックリスト</strong>：使う時に開く。</span>
+          <span class="lang lang-en">📚 Toolbox <strong>checklists</strong> — opened when needed, not memorized.</span>
+        </p></div>
+        <div class="card"><h4>slash commands / phase</h4><p class="muted">
+          <span class="lang lang-zh">📋 标准<strong>作业表</strong>：每道工序顺序固定。</span>
+          <span class="lang lang-ja">📋 標準<strong>作業手順書</strong>：工程順序を固定化。</span>
+          <span class="lang lang-en">📋 Standard <strong>work orders</strong> — phases run in fixed order.</span>
+        </p></div>
+        <div class="card"><h4>MCP / output style</h4><p class="muted">
+          <span class="lang lang-zh">🔌 接<strong>构内仪表</strong>+<strong>统一报告格式</strong>：避免野生数据流。</span>
+          <span class="lang lang-ja">🔌 <strong>構内計器</strong>に接続＋<strong>統一フォーマット</strong>：野良データ排除。</span>
+          <span class="lang lang-en">🔌 Plug to <strong>on-prem instruments</strong> + <strong>unified report format</strong>.</span>
+        </p></div>
+      </div>
+
+      <h3 style="margin-top:14px"><span class="lang lang-zh">补充说明（容易模糊的几个点）</span><span class="lang lang-ja">補足（曖昧になりがちな点）</span><span class="lang lang-en">Clarifications (commonly fuzzy points)</span></h3>
+      <ul>
+        <li><code>outputStyle: "onprem-review"</code> —
+          <span class="lang lang-zh">仅在 <strong>review/PR コメント</strong>这类输出上套一层格式（Must/Should/Nit + 受容基准引用）。日常会话不受影响。</span>
+          <span class="lang lang-ja">主に <strong>review/PR コメント</strong>系の出力に Must/Should/Nit + 受容基準引用フォーマットを適用。通常会話には影響なし。</span>
+          <span class="lang lang-en">Applies a Must/Should/Nit + AC-citation template only to <strong>review/PR-comment</strong> outputs; normal chat is unaffected.</span>
+        </li>
+        <li><code>commands/phase/kickoff.md</code> —
+          <span class="lang lang-zh"><code>/phase:kickoff</code> 形式调用，<strong>命名空间</strong>避免与 <code>/spec</code> 等顶层命令冲突，便于按"フェーズ"成组管理。</span>
+          <span class="lang lang-ja"><code>/phase:kickoff</code> で呼出。<strong>命名空間</strong>でトップ階層と衝突回避、フェーズ単位でグルーピング可能。</span>
+          <span class="lang lang-en">Invoked as <code>/phase:kickoff</code>; the <strong>namespace</strong> avoids clashes with top-level commands and groups phase-related actions.</span>
+        </li>
+        <li><code>.mcp.json</code> の <code>onprem-postgres</code> —
+          <span class="lang lang-zh">实际会话例：「<em>受注テーブルの最新 5 件を見せて</em>」→ MCP server が <code>OPSM_DB_READONLY_URL</code> で繋がる別の <strong>read-only ロール</strong>でクエリ実行。書込権限は agent からは絶対に出ない。</span>
+          <span class="lang lang-ja">会話例：「<em>受注テーブルの最新 5 件を見せて</em>」→ <code>OPSM_DB_READONLY_URL</code> で接続する<strong>読取専用ロール</strong>で実行。書込権限は agent 側に出ない。</span>
+          <span class="lang lang-en">Example chat: "<em>Show the last 5 rows of the orders table</em>" → server connects via <code>OPSM_DB_READONLY_URL</code> as a <strong>read-only role</strong>; write privileges never leak to the agent.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Claude Code 定制技术覆盖 -->
+    <section id="coverage" class="section">
+      <span class="eyebrow">Coverage</span>
+      <h2 class="section-title"><span class="lang lang-zh">Claude Code 定制技术覆盖（呼应 Part 2）</span><span class="lang lang-ja">Claude Code カスタマイズ技術カバレッジ（Part 2 対応）</span><span class="lang lang-en">Claude Code Customization Coverage (mirrors Part 2)</span></h2>
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">技术</span><span class="lang lang-ja">技術</span><span class="lang lang-en">Technique</span></th>
+          <th><span class="lang lang-zh">对应文件</span><span class="lang lang-ja">該当ファイル</span><span class="lang lang-en">File(s)</span></th>
+          <th><span class="lang lang-zh">作用</span><span class="lang lang-ja">役割</span><span class="lang lang-en">Role</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td><span class="lang lang-zh">记忆 / 规则</span><span class="lang lang-ja">メモリ / ルール</span><span class="lang lang-en">Memory / rules</span></td>
+            <td><code>AGENTS.md</code> / <code>CLAUDE.md</code> / <code>src/app/CLAUDE.md</code> / <code>CLAUDE.local.md</code> + <code>@docs/glossary.md</code></td>
+            <td><span class="lang lang-zh">权威 + 薄壳 + 嵌套 + 个人覆盖 + @import</span><span class="lang lang-ja">権威 + 薄壳 + ネスト + 個人上書 + @import</span><span class="lang lang-en">Authoritative + thin shell + nested + local override + @import</span></td></tr>
+          <tr><td><span class="lang lang-zh">斜杠命令</span><span class="lang lang-ja">スラッシュコマンド</span><span class="lang lang-en">Slash commands</span></td>
+            <td><code>.claude/commands/{spec,design,implement,test,review,deploy}.md</code> + <code>commands/phase/kickoff.md</code></td>
+            <td><span class="lang lang-zh">流程固化 + 命名空间（/phase:kickoff）</span><span class="lang lang-ja">流れの固定 + 命名空間</span><span class="lang lang-en">Frozen flow + namespace</span></td></tr>
+          <tr><td><span class="lang lang-zh">子代理</span><span class="lang lang-ja">サブエージェント</span><span class="lang lang-en">Subagents</span></td>
+            <td><code>.claude/agents/{spec-writer,architect,implementer,test-engineer,reviewer,sec-auditor}.md</code></td>
+            <td><span class="lang lang-zh">隔离上下文 / 限定 tools / 输出契约</span><span class="lang lang-ja">文脈分離 / tools 限定 / 出力契約</span><span class="lang lang-en">Isolated context / restricted tools / output contract</span></td></tr>
+          <tr><td><span class="lang lang-zh">技能 Skills</span><span class="lang lang-ja">技能 Skills</span><span class="lang lang-en">Skills</span></td>
+            <td><code>.claude/skills/{onprem-constraints,code-standards,quality-gates,domain-glossary}/SKILL.md</code> + <code>references/</code></td>
+            <td><span class="lang lang-zh">按需渐进加载，厚重清单分离</span><span class="lang lang-ja">必要時のみ段階的読込、重い参照を分離</span><span class="lang lang-en">Progressive disclosure, heavy refs split out</span></td></tr>
+          <tr><td><span class="lang lang-zh">钩子（多事件）</span><span class="lang lang-ja">フック（多イベント）</span><span class="lang lang-en">Hooks (multi-event)</span></td>
+            <td><code>.claude/hooks/*.sh</code> + <code>settings.json</code></td>
+            <td>PreToolUse / PostToolUse / UserPromptSubmit / Stop / SubagentStop / SessionStart / Notification / PreCompact</td></tr>
+          <tr><td>MCP</td>
+            <td><code>.mcp.json</code></td>
+            <td><span class="lang lang-zh">构内 PostgreSQL（只读自检）+ 本地 docs 文件服务器</span><span class="lang lang-ja">構内 PostgreSQL（読取専用）+ ローカル docs ファイルサーバ</span><span class="lang lang-en">On-prem PostgreSQL (read-only) + local docs file server</span></td></tr>
+          <tr><td><span class="lang lang-zh">设置层级</span><span class="lang lang-ja">設定レイヤ</span><span class="lang lang-en">Settings layers</span></td>
+            <td><code>~/.claude/settings.json</code> → <code>.claude/settings.json</code> → <code>.claude/settings.local.json</code></td>
+            <td><span class="lang lang-zh">用户 → 项目 → 本地（含 permissions / env / model / hooks）</span><span class="lang lang-ja">ユーザ → プロジェクト → ローカル</span><span class="lang lang-en">User → project → local</span></td></tr>
+          <tr><td>statusLine</td>
+            <td><code>.claude/statusline.sh</code></td>
+            <td><span class="lang lang-zh">显示分支 / 模型 / on-prem 模式</span><span class="lang lang-ja">ブランチ / モデル / オンプレ表示</span><span class="lang lang-en">Branch / model / on-prem indicator</span></td></tr>
+          <tr><td>output style</td>
+            <td><code>.claude/output-styles/onprem-review.md</code></td>
+            <td><span class="lang lang-zh">评审输出格式（Must/Should/Nit）</span><span class="lang lang-ja">レビュー出力形式</span><span class="lang lang-en">Review output format</span></td></tr>
+          <tr><td><span class="lang lang-zh">权限即护栏</span><span class="lang lang-ja">権限＝ガードレール</span><span class="lang lang-en">Permissions as guardrails</span></td>
+            <td><code>settings.json</code> の allow / deny / ask</td>
+            <td><span class="lang lang-zh">deny 外联与危险命令，直接体现 on-prem</span><span class="lang lang-ja">外部接続と危険操作を deny</span><span class="lang lang-en">Deny external/dangerous calls outright</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 辅助资料放哪里 -->
+    <section id="placement" class="section">
+      <span class="eyebrow">Where to Put References</span>
+      <h2 class="section-title"><span class="lang lang-zh">辅助资料放哪里</span><span class="lang lang-ja">参照資料の置き場所</span><span class="lang lang-en">Where to Put Supporting Refs</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">结论：<strong>按"加载时机"分层，单一事实源</strong>。精炼原则进 memory，厚重参照进 skill reference，子代理与命令<strong>共享同一份</strong>避免漂移。</span>
+        <span class="lang lang-ja">結論：<strong>"読込タイミング"で階層化、唯一の真実源</strong>。精錬原則は memory、重い参照は skill reference、サブエージェントとコマンドは<strong>同じファイルを共有</strong>してドリフト回避。</span>
+        <span class="lang lang-en">Decision: <strong>layer by load timing, single source of truth</strong>. Concise principles go in memory; heavy references in skill <code>references/</code>; subagents and commands <strong>share the same file</strong> to prevent drift.</span>
+      </p>
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">放在哪里</span><span class="lang lang-ja">場所</span><span class="lang lang-en">Where</span></th>
+          <th><span class="lang lang-zh">什么时候加载</span><span class="lang lang-ja">読込タイミング</span><span class="lang lang-en">When loaded</span></th>
+          <th><span class="lang lang-zh">放什么</span><span class="lang lang-ja">何を置く</span><span class="lang lang-en">What goes there</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td><code>AGENTS.md</code> / <code>CLAUDE.md</code></td>
+            <td><span class="lang lang-zh">每轮必加载</span><span class="lang lang-ja">毎ターン</span><span class="lang lang-en">Every turn</span></td>
+            <td><span class="lang lang-zh">精炼原则 + 指针（"详细见 skill X"）</span><span class="lang lang-ja">精錬原則 + ポインタ</span><span class="lang lang-en">Concise principles + pointers</span></td></tr>
+          <tr><td><code>.claude/skills/&lt;name&gt;/references/</code></td>
+            <td><span class="lang lang-zh">按需渐进</span><span class="lang lang-ja">必要時のみ</span><span class="lang lang-en">On demand</span></td>
+            <td><span class="lang lang-zh">编码规约 / review / test / security 长清单</span><span class="lang lang-ja">編码規約 / レビュー / テスト / セキュリティ チェックリスト</span><span class="lang lang-en">Coding conventions / review / test / security checklists</span></td></tr>
+          <tr><td><code>.claude/agents/&lt;role&gt;.md</code></td>
+            <td><span class="lang lang-zh">隔离上下文加载</span><span class="lang lang-ja">分離文脈で読込</span><span class="lang lang-en">In isolated context</span></td>
+            <td><span class="lang lang-zh">短角色描述 + 指向同一份 reference</span><span class="lang lang-ja">短い役割定義 + 同じ reference を指す</span><span class="lang lang-en">Brief role + points to the same reference</span></td></tr>
+          <tr><td><code>.claude/commands/*.md</code></td>
+            <td><span class="lang lang-zh">命令调用时</span><span class="lang lang-ja">コマンド呼出時</span><span class="lang lang-en">When invoked</span></td>
+            <td><span class="lang lang-zh">流程步骤 + 引用同一 reference</span><span class="lang lang-ja">手順 + 同じ reference を引用</span><span class="lang lang-en">Procedure + same reference</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 阶段 × harness -->
+    <section id="phases" class="section">
+      <span class="eyebrow">Phases × Harness</span>
+      <h2 class="section-title"><span class="lang lang-zh">阶段 × harness</span><span class="lang lang-ja">フェーズ × harness</span><span class="lang lang-en">Phases × Harness</span></h2>
+      <div class="mermaid">
+flowchart LR
+    S["要件 spec"]:::p --> D["設計 design"]:::p --> I["実装 implement"]:::p --> T["テスト test"]:::p --> R["レビュー review"]:::p --> C["CI / デプロイ"]:::p --> O["運用 operate"]:::p
+    S -. FF: /spec + glossary .-> S
+    S -. FB: 仕様 lint .-> S
+    I -. FF: 規格 + skill .-> I
+    I -. FB: format/ruff/mypy .-> I
+    T -. FB: pytest hook + cov gate .-> T
+    R -. FB: secret-scan + sec-auditor .-> R
+    C -. FB: CI 全センサー再走 .-> C
+    classDef p stroke:#5b8cff,stroke-width:2px;
+      </div>
+
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">阶段</span><span class="lang lang-ja">フェーズ</span><span class="lang lang-en">Phase</span></th>
+          <th>Feed-forward</th>
+          <th>Feedback</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><span class="lang lang-zh">要件定义</span><span class="lang lang-ja">要件定義</span><span class="lang lang-en">Requirements</span></td>
+            <td><code>/spec</code> + spec template + skill <code>domain-glossary</code></td>
+            <td><span class="lang lang-zh">规格 lint：受容基准齐全/无歧义（reviewer 子代理）</span><span class="lang lang-ja">仕様 lint（reviewer）</span><span class="lang lang-en">Spec lint via reviewer subagent</span></td></tr>
+          <tr><td><span class="lang lang-zh">设计</span><span class="lang lang-ja">設計</span><span class="lang lang-en">Design</span></td>
+            <td><code>/design</code> + ADR template + skill <code>onprem-constraints</code></td>
+            <td><span class="lang lang-zh">设计评审 + 依赖白名单</span><span class="lang lang-ja">設計レビュー + 依存許可リスト</span><span class="lang lang-en">Design review + dep allowlist</span></td></tr>
+          <tr><td><span class="lang lang-zh">实装</span><span class="lang lang-ja">実装</span><span class="lang lang-en">Implement</span></td>
+            <td><code>/implement</code>（绑定已批准规格）+ 分层规则</td>
+            <td>format hook + ruff + mypy</td></tr>
+          <tr><td><span class="lang lang-zh">测试</span><span class="lang lang-ja">テスト</span><span class="lang lang-en">Test</span></td>
+            <td><code>/test</code> + test-engineer +「受容基准＝测试」</td>
+            <td>pytest（Stop hook） + 覆盖率 gate</td></tr>
+          <tr><td><span class="lang lang-zh">评审</span><span class="lang lang-ja">レビュー</span><span class="lang lang-en">Review</span></td>
+            <td>reviewer 子代理 + 评审清单</td>
+            <td>secret-scan + sec-auditor + 仕様適合 gate</td></tr>
+          <tr><td><span class="lang lang-zh">CI / 部署 (on-prem)</span><span class="lang lang-ja">CI / デプロイ</span><span class="lang lang-en">CI / Deploy</span></td>
+            <td><code>/deploy</code> + docker-compose + runbook</td>
+            <td><span class="lang lang-zh">CI 跑全部传感器 + on-prem 冒烟/健康检查</span><span class="lang lang-ja">CI で全センサー + 健康チェック</span><span class="lang lang-en">CI re-runs all sensors + healthz</span></td></tr>
+          <tr><td><span class="lang lang-zh">运用</span><span class="lang lang-ja">運用</span><span class="lang lang-en">Operate</span></td>
+            <td><span class="lang lang-zh">日志 / 健康 / 可观测配置</span><span class="lang lang-ja">ログ / 健康 / 可観測</span><span class="lang lang-en">Logs / health / observability</span></td>
+            <td><span class="lang lang-zh">回归基线 / eval（AgentOps 类比）</span><span class="lang lang-ja">回帰基準 / eval</span><span class="lang lang-en">Regression baselines / eval</span></td></tr>
+        </tbody>
+      </table>
+      <p class="muted" style="margin-top:10px">
+        <span class="lang lang-zh"><strong>关键：</strong>hook 阻断 / CI 失败 ⇒ harness <strong>不可被绕过</strong>，这正是「保证效果」的来源。</span>
+        <span class="lang lang-ja"><strong>要点：</strong>hook ブロック / CI 失敗 ⇒ harness は<strong>迂回不可</strong>。これが「効果担保」の根拠。</span>
+        <span class="lang lang-en"><strong>Key:</strong> hook blocks / CI failure ⇒ harness <strong>cannot be bypassed</strong>. That is what "guarantees the effect."</span>
+      </p>
+    </section>
+
+    <!-- 人 vs harness 役割分担 -->
+    <section id="roles" class="section">
+      <span class="eyebrow">Human vs Harness</span>
+      <h2 class="section-title"><span class="lang lang-zh">人 vs harness 的分工</span><span class="lang lang-ja">人と harness の役割分担</span><span class="lang lang-en">Who Does What — Human vs Harness</span></h2>
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">阶段</span><span class="lang lang-ja">フェーズ</span><span class="lang lang-en">Phase</span></th>
+          <th><span class="lang lang-zh">人的判断（不可外包）</span><span class="lang lang-ja">人の判断（外注不可）</span><span class="lang lang-en">Human judgment (non-delegable)</span></th>
+          <th><span class="lang lang-zh">harness 自动（机械化）</span><span class="lang lang-ja">harness の自動化</span><span class="lang lang-en">Harness automation</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td><span class="lang lang-zh">要件</span><span class="lang lang-ja">要件</span><span class="lang lang-en">Requirements</span></td>
+            <td><span class="lang lang-zh">业务价值・優先順位・受容基準の妥当性判断</span><span class="lang lang-ja">業務価値・優先順位・受容基準の妥当性</span><span class="lang lang-en">Business value, priority, AC validity</span></td>
+            <td><span class="lang lang-zh">テンプレ準拠 / 用語整合 / 曖昧語検出</span><span class="lang lang-ja">テンプレ準拠・用語整合・曖昧語検出</span><span class="lang lang-en">Template compliance, glossary consistency, fuzzy-word detection</span></td></tr>
+          <tr><td><span class="lang lang-zh">设计</span><span class="lang lang-ja">設計</span><span class="lang lang-en">Design</span></td>
+            <td><span class="lang lang-zh">アーキ選択・トレードオフ・ADR 承認</span><span class="lang lang-ja">アーキ選択・トレードオフ・ADR 承認</span><span class="lang lang-en">Architecture choice, trade-offs, ADR approval</span></td>
+            <td><span class="lang lang-zh">依存许可表 / on-prem 制約適合チェック</span><span class="lang lang-ja">依存許可リスト・オンプレ制約適合チェック</span><span class="lang lang-en">Dep allowlist + on-prem constraint check</span></td></tr>
+          <tr><td><span class="lang lang-zh">实装</span><span class="lang lang-ja">実装</span><span class="lang lang-en">Implement</span></td>
+            <td><span class="lang lang-zh">ドメインモデルの妥当性・命名・抽象境界</span><span class="lang lang-ja">ドメインモデルの妥当性・命名・抽象境界</span><span class="lang lang-en">Domain model soundness, naming, boundaries</span></td>
+            <td>format / ruff / mypy / type-check</td></tr>
+          <tr><td><span class="lang lang-zh">测试</span><span class="lang lang-ja">テスト</span><span class="lang lang-en">Test</span></td>
+            <td><span class="lang lang-zh">テスト観点の網羅性・境界値設計</span><span class="lang lang-ja">テスト観点の網羅性・境界値</span><span class="lang lang-en">Coverage strategy, boundary cases</span></td>
+            <td>pytest 実行 + coverage gate + Stop hook</td></tr>
+          <tr><td><span class="lang lang-zh">评审</span><span class="lang lang-ja">レビュー</span><span class="lang lang-en">Review</span></td>
+            <td><span class="lang lang-zh">業務 / 顧客視点・PO 受け入れ判断</span><span class="lang lang-ja">業務／顧客視点・PO 受入</span><span class="lang lang-en">Customer/business view, PO acceptance</span></td>
+            <td>secret-scan / sec-auditor / 仕様適合 lint</td></tr>
+          <tr><td><span class="lang lang-zh">CI/部署</span><span class="lang lang-ja">CI/デプロイ</span><span class="lang lang-en">CI/Deploy</span></td>
+            <td><span class="lang lang-zh">リリース判断・段階リリース戦略</span><span class="lang lang-ja">リリース判断・段階リリース戦略</span><span class="lang lang-en">Release go/no-go, rollout strategy</span></td>
+            <td><span class="lang lang-zh">パイプライン全センサー再走 + healthz</span><span class="lang lang-ja">パイプライン全センサー再走 + healthz</span><span class="lang lang-en">CI re-runs all sensors + healthz</span></td></tr>
+          <tr><td><span class="lang lang-zh">运用</span><span class="lang lang-ja">運用</span><span class="lang lang-en">Operate</span></td>
+            <td><span class="lang lang-zh">SLO 設計・インシデント判断・運用方針</span><span class="lang lang-ja">SLO 設計・インシデント判断</span><span class="lang lang-en">SLO design, incident triage</span></td>
+            <td><span class="lang lang-zh">メトリクス収集・ログ・回帰 eval</span><span class="lang lang-ja">メトリクス・ログ・回帰 eval</span><span class="lang lang-en">Metrics, logs, regression evals</span></td></tr>
+        </tbody>
+      </table>
+      <p class="muted" style="margin-top:8px">
+        <span class="lang lang-zh">→ harness 让"机械可判定"的部分不再耗费人力，把人留给"需要判断的"那部分。</span>
+        <span class="lang lang-ja">→ harness は"機械判定可能"な部分を肩代わりし、人は"判断が要る"部分に集中。</span>
+        <span class="lang lang-en">→ The harness automates the mechanically-decidable parts, freeing humans for what truly needs judgment.</span>
+      </p>
+    </section>
+
+    <!-- 失败模式 -->
+    <section id="failures" class="section">
+      <span class="eyebrow">Failure Modes</span>
+      <h2 class="section-title"><span class="lang lang-zh">失败时长这样（迂回不可的证据）</span><span class="lang lang-ja">失敗パターン（迂回不可の実物）</span><span class="lang lang-en">What Failures Actually Look Like</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">"hook が止める" は文字より<strong>ターミナル出力</strong>の方が分かりやすい。実際の出力例：</span>
+        <span class="lang lang-ja">"hook で止まる" は文章より<strong>端末出力</strong>が分かりやすい。実際の例：</span>
+        <span class="lang lang-en">"Hooks block" is easier to grasp via <strong>actual terminal output</strong>:</span>
+      </p>
+
+      <h3>① <code>no-external-net.sh</code> <span class="lang lang-zh">阻断外联</span><span class="lang lang-ja">外部接続を阻止</span><span class="lang lang-en">blocks external call</span></h3>
+      <pre><code>$ claude  # （会話中）
+&gt; pip install を試したい
+[no-external-net] オンプレ制約：外部ネットワークへの接続は禁止です → pip install requests
+PreToolUse hook returned non-zero (exit 2). Blocking Bash invocation.
+# ← Claude Code は実行を中止し、代替（社内ミラー / .whl 持込）を提案させられる</code></pre>
+
+      <h3>② <code>secret-scan.sh</code> <span class="lang lang-zh">检出秘密</span><span class="lang lang-ja">秘密検出</span><span class="lang lang-en">catches secret</span></h3>
+      <pre><code>$ claude
+&gt; .env を src/ に直接書き込もうとした
+[secret-scan] 秘密情報の疑い。env/.env へ外出ししてください（ハードコード禁止）:
+src/app/db/session.py:12: password="P@ssw0rd-leaked"
+PostToolUse hook returned non-zero (exit 2). Edit reverted.</code></pre>
+
+      <h3>③ CI <span class="lang lang-zh">失败</span><span class="lang lang-ja">失敗</span><span class="lang lang-en">red</span></h3>
+      <pre><code>Run pytest tests/test_order_domain.py -q
+.....F.........                                                          [100%]
+=================================== FAILURES ===================================
+______________________ test_ac6_high_value_requires_approval ___________________
+    with pytest.raises(OrderInvariantError):
+&gt;       order.confirm()
+E       Failed: DID NOT RAISE &lt;class 'OrderInvariantError'&gt;
+=========================== 1 failed, 14 passed in 0.32s ====================
+Error: Process completed with exit code 1.
+# ← マージ不能。受容基準（AC-6）と実装が一致するまで PR は緑にならない</code></pre>
+
+      <p class="muted">
+        <span class="lang lang-zh">→ 这些都是<strong>真实可复现</strong>的：在本仓库 <code>cd demo && python -m pytest tests/test_order_domain.py -q</code> 即可现场实验（一行改坏 domain，跑一次就能复现 ③）。</span>
+        <span class="lang lang-ja">→ いずれも<strong>再現可能</strong>。本リポジトリで <code>cd demo && python -m pytest tests/test_order_domain.py -q</code>、domain を 1 行壊せば ③ を即再現できる。</span>
+        <span class="lang lang-en">→ All <strong>reproducible</strong>: run <code>cd demo && python -m pytest tests/test_order_domain.py -q</code>; one-line breaks the domain to reproduce ③.</span>
+      </p>
+    </section>
+
+    <!-- 受注贯通证据链 -->
+    <section id="order" class="section">
+      <span class="eyebrow">Order Throughline</span>
+      <h2 class="section-title"><span class="lang lang-zh">受注（Order）贯通证据链</span><span class="lang lang-ja">受注（Order）の貫通証拠</span><span class="lang lang-en">Order Feature Throughline</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">规格 → 设计 → 代码 → 测试 → CI 全程证据，<strong>核心 domain 不依赖 FastAPI/DB，纯 pytest 即可离线验证</strong>。</span>
+        <span class="lang lang-ja">仕様 → 設計 → コード → テスト → CI を一気通貫。<strong>core domain は FastAPI/DB 非依存、純 pytest でオフライン検証可能</strong>。</span>
+        <span class="lang lang-en">From spec to design to code to tests to CI. <strong>The core domain is FastAPI/DB-free; pure pytest verifies it offline.</strong></span>
+      </p>
+
+      <h3>1. <code>docs/specs/order.md</code> — 受容基準（抜粋）</h3>
+      <pre><code>## 4. 受容基準（Acceptance Criteria）
+1. AC-1: 受注は最低 1 件の明細を持つ。空の明細での確定は不可。
+2. AC-2: 数量は 1 以上の整数。
+3. AC-4: 受注合計 = Σ(明細.単価 × 明細.数量)。
+5. AC-5: 状態遷移は draft → confirmed → shipping → completed、各状態から cancelled も可（completed からのキャンセル不可）。
+6. AC-6: 合計 ≥ 1,000,000 円は requires_approval=True、未承認では confirm 不可。
+8. AC-8: 確定操作は冪等。</code></pre>
+
+      <h3><span class="lang lang-zh">状态迁移图</span><span class="lang lang-ja">状態遷移図</span><span class="lang lang-en">State diagram</span></h3>
+      <div class="mermaid">
+stateDiagram-v2
+    [*] --> draft
+    draft --> confirmed: confirm()<br/>AC-1/AC-6/AC-8
+    confirmed --> shipping: ship()
+    shipping --> completed: complete()
+    draft --> cancelled: cancel()
+    confirmed --> cancelled: cancel()
+    shipping --> cancelled: cancel()
+    completed --> [*]: AC-5 (no cancel)
+    cancelled --> [*]
+      </div>
+
+      <h3>2. <code>src/app/domain/order.py</code> — 純 Python ドメイン</h3>
+      <pre><code>def confirm(self, approved: bool = False) -&gt; None:
+    """draft → confirmed（AC-1, AC-5, AC-6, AC-8 冪等）。"""
+    if self.status is OrderStatus.CONFIRMED:
+        return  # AC-8: 冪等
+    if self.status is not OrderStatus.DRAFT:
+        raise OrderInvariantError(...)  # AC-5
+    if not self.lines:
+        raise OrderInvariantError("明細が空の受注は確定できません（AC-1）")
+    if self.requires_approval() and not approved:
+        raise OrderInvariantError("高額受注は承認が必要です（AC-6）")
+    self.status = OrderStatus.CONFIRMED</code></pre>
+
+      <h3>3. <code>tests/test_order_domain.py</code> — 受容基準＝テスト</h3>
+      <pre><code># AC-6 高額受注は承認必須
+def test_ac6_high_value_requires_approval() -&gt; None:
+    order = Order(id="O-1", customer_id="C-1")
+    order.add_line(_line(quantity=1, unit_price=1_000_000))
+    assert order.requires_approval() is True
+    with pytest.raises(OrderInvariantError):
+        order.confirm()                      # 未承認は不可
+    order.confirm(approved=True)
+    assert order.status is OrderStatus.CONFIRMED</code></pre>
+
+      <h3>4. <code>.github/workflows/ci.yml</code> — 同じセンサーを CI で再走</h3>
+      <pre><code>- name: Ruff      ; run: ruff check .
+- name: Mypy      ; run: mypy src
+- name: Pytest    ; run: pytest tests/test_order_domain.py -q</code></pre>
+
+      <p class="muted">
+        <span class="lang lang-zh">⚙ 本环境实测 <code>pytest tests/test_order_domain.py -q</code> → <strong>15 passed</strong>。这就是「可执行的 feedback 传感器」。</span>
+        <span class="lang lang-ja">⚙ 本環境で実測 <code>pytest tests/test_order_domain.py -q</code> → <strong>15 passed</strong>。これが「実行可能な feedback センサー」。</span>
+        <span class="lang lang-en">⚙ Verified locally: <code>pytest tests/test_order_domain.py -q</code> → <strong>15 passed</strong>. That is an executable feedback sensor.</span>
+      </p>
+    </section>
+
+    <!-- on-prem 部署 -->
+    <section id="deploy" class="section">
+      <span class="eyebrow">On-Prem Deploy</span>
+      <h2 class="section-title"><span class="lang lang-zh">on-prem 部署概览</span><span class="lang lang-ja">オンプレ デプロイ概要</span><span class="lang lang-en">On-Prem Deploy Overview</span></h2>
+      <pre><code># demo/ops/docker-compose.yml（抜粋）
+services:
+  app:      # FastAPI（構内ネットワーク内、外部 egress なし）
+    build: { context: .., dockerfile: ops/Dockerfile }
+    env_file: [.env]
+    depends_on: [postgres]
+  postgres: # データは構内ボリュームに駐留
+    image: postgres:16
+    volumes: [pg_data:/var/lib/postgresql/data]
+  nginx:    # 構内 80 番でリバースプロキシ
+    image: nginx:1.27-alpine
+    ports: ["80:80"]
+volumes: { pg_data: {} }</code></pre>
+      <ul>
+        <li><span class="lang lang-zh"><strong>数据驻留</strong>：<code>pg_data</code> 卷 → 构内ストレージ。</span><span class="lang lang-ja"><strong>データ駐留</strong>：<code>pg_data</code> ボリューム → 構内ストレージ。</span><span class="lang lang-en"><strong>Data residency</strong>: <code>pg_data</code> volume → on-prem storage.</span></li>
+        <li><span class="lang lang-zh"><strong>禁外联</strong>：hook + settings.deny + CI 三重保险。</span><span class="lang lang-ja"><strong>外部接続禁止</strong>：hook + settings.deny + CI の三重防御。</span><span class="lang lang-en"><strong>No external calls</strong>: hook + settings.deny + CI triple-defense.</span></li>
+        <li><span class="lang lang-zh"><strong>密钥</strong>：<code>.env</code>（不入库）→ <code>pydantic-settings</code> 注入。</span><span class="lang lang-ja"><strong>秘密</strong>：<code>.env</code>（コミット禁止）→ <code>pydantic-settings</code> 注入。</span><span class="lang lang-en"><strong>Secrets</strong>: <code>.env</code> (gitignored) → injected via <code>pydantic-settings</code>.</span></li>
+      </ul>
+
+      <h3 style="margin-top:14px"><span class="lang lang-zh">实测命令（最少集合）</span><span class="lang lang-ja">最小実行コマンド</span><span class="lang lang-en">Quick run (minimal)</span></h3>
+      <pre><code># 1) ドメイン純テスト（DB 不要）
+cd demo
+python -m pytest tests/test_order_domain.py -q          # → 15 passed
+
+# 2) 開発インストール（pyproject 経由）
+pip install -e ".[dev]"
+
+# 3) ローカル起動（SQLite in-memory）
+uvicorn app.main:app --reload --app-dir src
+
+# 4) オンプレ風スタック（Docker Compose）
+docker compose -f ops/docker-compose.yml --env-file ops/.env up -d
+curl http://localhost/healthz                            # → {"status":"ok"}</code></pre>
+    </section>
+
+    <!-- 实工程 gap -->
+    <section id="gap" class="section">
+      <span class="eyebrow">Reality Gap</span>
+      <h2 class="section-title"><span class="lang lang-zh">和真实工程之间的 gap（必读）</span><span class="lang lang-ja">実工程とのギャップ（必読）</span><span class="lang lang-en">Gap to Real-World Practice (must-read)</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">本 demo 是<strong>教学最小集</strong>，下面是直接搬到生产前要补的关键差分：</span>
+        <span class="lang lang-ja">本 demo は<strong>教学最小集</strong>。本番投入前に必ず補強すべき主な差分：</span>
+        <span class="lang lang-en">This demo is a <strong>teaching minimum</strong>. Before any production use, close these gaps:</span>
+      </p>
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">领域</span><span class="lang lang-ja">領域</span><span class="lang lang-en">Area</span></th>
+          <th><span class="lang lang-zh">本 demo</span><span class="lang lang-ja">本 demo</span><span class="lang lang-en">This demo</span></th>
+          <th><span class="lang lang-zh">真实工程应做</span><span class="lang lang-ja">本番では</span><span class="lang lang-en">Real-world</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>hooks <span class="lang lang-zh">脚本</span></td>
+            <td><span class="lang lang-zh">bash 前提（<code>set -uo pipefail</code> + grep/sed）</span><span class="lang lang-ja">bash 前提（<code>set -uo pipefail</code> + grep/sed）</span><span class="lang lang-en">bash-only (grep/sed)</span></td>
+            <td><span class="lang lang-zh">Windows 本机要 <strong>WSL/Git Bash</strong>；多 OS 想兼容用 <strong>PowerShell / Python</strong> 版本；JSON 解析用 <strong>jq</strong>。</span><span class="lang lang-ja">Windows は <strong>WSL/Git Bash</strong> 必須。マルチ OS は <strong>PowerShell / Python</strong> 版併備、JSON は <strong>jq</strong>。</span><span class="lang lang-en"><strong>WSL/Git Bash</strong> on Windows; ship <strong>PowerShell/Python</strong> variants for cross-OS; use <strong>jq</strong> for JSON.</span></td>
+          </tr>
+          <tr>
+            <td>secret-scan</td>
+            <td><span class="lang lang-zh">単純 regex（AKIA / sk-… / password=…）</span><span class="lang lang-ja">単純 regex（AKIA / sk-… / password=…）</span><span class="lang lang-en">simple regex</span></td>
+            <td><strong>gitleaks / trufflehog</strong> + <span class="lang lang-zh">GitHub Advanced Security 等専用ツールと併用、エントロピー検査 + 履歴スキャン。</span><span class="lang lang-ja">GitHub Advanced Security 等の専用ツール、エントロピー検査 + 履歴スキャン。</span><span class="lang lang-en">+ GHAS, entropy + history scans.</span></td>
+          </tr>
+          <tr>
+            <td>no-external-net</td>
+            <td><span class="lang lang-zh">プロセス文字列マッチ（<code>bash -c "$(echo curl ...)"</code> で迂回可能）</span><span class="lang lang-ja">プロセス文字列マッチ（迂回容易）</span><span class="lang lang-en">process string-match (bypassable)</span></td>
+            <td><span class="lang lang-zh">OS レベルで遮断：<strong>network namespace / iptables / Docker network 隔離</strong>、コンテナを <code>--network none</code> で起動して必要なものだけプロキシ経由。</span><span class="lang lang-ja">OS で遮断：<strong>network namespace / iptables / Docker network</strong>、<code>--network none</code> + プロキシ。</span><span class="lang lang-en">OS-level: <strong>network namespace / iptables / Docker network</strong>, <code>--network none</code> + proxy.</span></td>
+          </tr>
+          <tr>
+            <td>CI runner</td>
+            <td><code>ubuntu-latest</code> <span class="lang lang-zh">（GitHub クラウド）</span><span class="lang lang-ja">（GitHub クラウド）</span><span class="lang lang-en">(GitHub cloud)</span></td>
+            <td><span class="lang lang-zh">完全闭域なら <strong>self-hosted runner</strong> 必須（社内ネットワーク内 + 構内レジストリのみ pull）。</span><span class="lang lang-ja">完全閉域は <strong>self-hosted runner</strong> 必須。社内ネット内・構内レジストリ pull のみ。</span><span class="lang lang-en">For air-gapped, <strong>self-hosted runners</strong> only, internal network + on-prem registry.</span></td>
+          </tr>
+          <tr>
+            <td>DB <span class="lang lang-zh">统合测试</span></td>
+            <td>SQLite in-memory</td>
+            <td><strong>testcontainers</strong> <span class="lang lang-zh">で本番と同じ PostgreSQL バージョン、migration（alembic 等）も含めて検証。</span><span class="lang lang-ja">で本番同等 PostgreSQL、migration（alembic 等）込み検証。</span><span class="lang lang-en">with same PostgreSQL major version + migrations (alembic).</span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">承认阈值</span></td>
+            <td><code>APPROVAL_THRESHOLD = 1_000_000</code> <span class="lang lang-zh">domain ハードコード（教学優先）</span><span class="lang lang-ja">domain ハードコード（教学優先）</span><span class="lang lang-en">domain hard-coded</span></td>
+            <td><span class="lang lang-zh">設定 / マスタ管理。通貨・取引先・地域別に動的可変、変更履歴も保存。</span><span class="lang lang-ja">設定／マスタ管理。通貨・取引先・地域別に可変＋変更履歴。</span><span class="lang lang-en">Config/master data, per-currency/customer/region, with audit trail.</span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">DB 启动</span></td>
+            <td><span class="lang lang-zh"><code>Base.metadata.create_all</code>（lifespan 内）</span><span class="lang lang-ja"><code>Base.metadata.create_all</code>（lifespan 内）</span><span class="lang lang-en"><code>create_all</code> on startup</span></td>
+            <td><strong>alembic</strong> <span class="lang lang-zh">マイグレーションを CD パイプラインで明示適用、ロールバック手順も用意。</span><span class="lang lang-ja">マイグレーションを CD で明示適用＋ロールバック。</span><span class="lang lang-en">migrations explicit in CD + rollback playbook.</span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">模型选定</span></td>
+            <td><span class="lang lang-zh">frontmatter で固定モデル指定（教学のため）</span><span class="lang lang-ja">frontmatter で固定（教学のため）</span><span class="lang lang-en">fixed model in frontmatter</span></td>
+            <td><span class="lang lang-zh">コスト/性能/レイテンシでルーティング戦略を harness に組込（軽い作業は haiku、設計は opus 等）。</span><span class="lang lang-ja">コスト／性能／レイテンシで動的ルーティング（軽作業 haiku／設計 opus 等）。</span><span class="lang lang-en">Cost/perf/latency-aware routing in the harness (haiku for light, opus for design).</span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">观测性</span></td>
+            <td><code>/healthz</code> <span class="lang lang-zh">のみ</span><span class="lang lang-ja">のみ</span><span class="lang lang-en">only</span></td>
+            <td><strong>OpenTelemetry</strong> + <span class="lang lang-zh">構内 collector → メトリクス／トレース／ログ。AgentOps（Langfuse 等）も検討。</span><span class="lang lang-ja">構内 collector → メトリクス／トレース／ログ。AgentOps（Langfuse 等）併用。</span><span class="lang lang-en">on-prem collector → metrics/traces/logs; consider AgentOps (e.g. Langfuse).</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 要点总结 -->
+    <section id="wrap" class="section">
+      <span class="eyebrow">Wrap-up</span>
+      <h2 class="section-title"><span class="lang lang-zh">要点总结：每个 gate 如何「保证效果」</span><span class="lang lang-ja">まとめ：各ゲートが「効果」をどう担保するか</span><span class="lang lang-en">Wrap-up: How Each Gate "Guarantees" the Outcome</span></h2>
+      <div class="cards cols-2">
+        <div class="card">
+          <h3><span class="lang lang-zh">Feed-forward</span><span class="lang lang-ja">Feed-forward</span><span class="lang lang-en">Feed-forward</span></h3>
+          <p class="muted">
+            <span class="lang lang-zh">在 LLM 看到任务前就把规则、规格、技能注入上下文。<strong>没承认的规格不能进入实装</strong>——这是最便宜的"前置纠偏"。</span>
+            <span class="lang lang-ja">LLM がタスクを見る前にルール・仕様・技能を文脈へ注入。<strong>未承認仕様は実装に進めない</strong>——最も安価な"前段是正"。</span>
+            <span class="lang lang-en">Inject rules, specs, and skills into context <em>before</em> the LLM sees the task. <strong>No approved spec → no implementation</strong> — the cheapest possible correction.</span>
+          </p>
+        </div>
+        <div class="card">
+          <h3><span class="lang lang-zh">Feedback</span><span class="lang lang-ja">Feedback</span><span class="lang lang-en">Feedback</span></h3>
+          <p class="muted">
+            <span class="lang lang-zh">钩子在<strong>人看到之前</strong>就拦截：format / ruff / mypy / pytest / secret-scan / no-external-net。CI 再走一次同一组传感器，杜绝"绕过"。</span>
+            <span class="lang lang-ja">フックは<strong>人が見る前</strong>に遮断：format / ruff / mypy / pytest / secret-scan / no-external-net。CI で再走させ"迂回"を断つ。</span>
+            <span class="lang lang-en">Hooks intercept <strong>before any human sees it</strong>: format / ruff / mypy / pytest / secret-scan / no-external-net. CI re-runs the same sensors so nothing slips past.</span>
+          </p>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:14px">
+        <span class="lang lang-zh">→ <strong>harness 不是装饰，而是 SDLC 的轨道</strong>。装好后，效果不再依赖个人技艺，而是体现在每一次工具调用 / 每一次 commit / 每一次 CI 上。</span>
+        <span class="lang lang-ja">→ <strong>harness は飾りではなく SDLC のレール</strong>。一度敷けば、効果は個人の技量ではなく、毎ツール呼出・毎コミット・毎 CI に現れる。</span>
+        <span class="lang lang-en">→ <strong>The harness isn't decoration; it's the SDLC's rails.</strong> Once laid, the outcome no longer depends on individual skill — it shows up at every tool call, every commit, every CI run.</span>
+      </p>
+      <p class="muted" style="margin-top:10px">
+        <span class="lang lang-zh">真实代码可在 <code>demo/</code> 下查看：<code>AGENTS.md</code> · <code>.claude/</code> · <code>docs/</code> · <code>src/</code> · <code>tests/</code> · <code>ops/</code> · <code>.github/</code>。</span>
+        <span class="lang lang-ja">実コードは <code>demo/</code> を参照。</span>
+        <span class="lang lang-en">All real files live under <code>demo/</code>.</span>
+      </p>
+      <p class="lead" style="margin-top:14px">
+        <span class="lang lang-zh">→ 想再深入？<a href="references.html#cli">References · Claude Code 官方文档</a>（Hooks / Subagents / Skills / Slash commands / Output styles / MCP / Plugins / AGENTS.md）+ <a href="part2.html">Part 2 · 定制与标准</a> + <a href="part3.html">Part 3 · 变迁与展望</a>。</span>
+        <span class="lang lang-ja">→ さらに深掘り：<a href="references.html#cli">References · Claude Code 公式ドキュメント</a>（Hooks / Subagents / Skills / Slash commands / Output styles / MCP / Plugins / AGENTS.md）＋ <a href="part2.html">Part 2 · カスタマイズと標準</a> ＋ <a href="part3.html">Part 3 · 変遷と展望</a>。</span>
+        <span class="lang lang-en">→ Go deeper: <a href="references.html#cli">References · Claude Code official docs</a> (Hooks / Subagents / Skills / Slash commands / Output styles / MCP / Plugins / AGENTS.md) + <a href="part2.html">Part 2 · Customization &amp; Standards</a> + <a href="part3.html">Part 3 · Evolution &amp; Outlook</a>.</span>
+      </p>
+    </section>
+
+    <!-- ⑩ 未来展望：AI 业务闭环 -->
+    <section id="future" class="section">
+      <span class="eyebrow">Future Outlook · AI Closed-Loop</span>
+      <h2 class="section-title"><span class="lang lang-zh">⑩ 未来展望：AI 业务闭环（人只剩 3 个判断点）</span><span class="lang lang-ja">⑩ 次世代の展望：AI 業務クローズドループ（人は 3 点の判断のみ）</span><span class="lang lang-en">⑩ Future Outlook: AI Closed-Loop (Humans Decide Only 3 Things)</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">harness が成熟し、<strong>feedback センサー（テスト・カバレッジ・突然変異・性能・差分・seguridad）</strong>が機械判定可能な品質を網羅すると、開発ループは <strong>「Wave（波）= 数時間〜数日の自律実装単位」</strong> として AI が自走する。人が出番なのは "判断" の <strong>3 点だけ</strong>。それ以外（コード生成 / テスト生成 / 実行 / 比較 / カバレッジ / 突然変異 / 性能 / 差分解析 / 再生成 / ドキュメント）は<strong>すべて自動</strong>。</span>
+        <span class="lang lang-ja">harness が成熟し、<strong>feedback センサー（テスト・カバレッジ・mutation・性能・差分・セキュリティ）</strong>が機械判定可能な品質を網羅すると、開発ループは<strong>「Wave（波）＝ 数時間〜数日の自律実装単位」</strong>として AI が自走する。人が要るのは"判断"の<strong>3 点だけ</strong>。それ以外（コード生成 / テスト生成 / 実行 / 比較 / カバレッジ / 突然変異 / 性能 / 差分解析 / 再生成 / ドキュメント）は<strong>すべて自動</strong>。</span>
+        <span class="lang lang-en">As the harness matures and <strong>feedback sensors (tests, coverage, mutation, perf, diff, security)</strong> cover what's mechanically decidable, the dev loop becomes a self-driving <strong>"Wave" — a several-hour-to-day autonomous unit of work</strong>. Humans intervene at <strong>only 3 judgment points</strong>; everything else (code-gen / test-gen / run / compare / coverage / mutation / perf / diff-analysis / regen / docs) is <strong>fully automated</strong>.</span>
+      </p>
+
+      <h3><span class="lang lang-zh">人间残留的 3 个角色</span><span class="lang lang-ja">人に残る 3 つの役割</span><span class="lang lang-en">The 3 remaining human roles</span></h3>
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">角色</span><span class="lang lang-ja">ロール</span><span class="lang lang-en">Role</span></th>
+          <th><span class="lang lang-zh">时机</span><span class="lang lang-ja">タイミング</span><span class="lang lang-en">When</span></th>
+          <th><span class="lang lang-zh">判断内容</span><span class="lang lang-ja">判断内容</span><span class="lang lang-en">What is decided</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Judge</strong> <span class="muted">(<span class="lang lang-zh">裁定者</span><span class="lang lang-ja">判定者</span><span class="lang lang-en">arbiter</span>)</span></td>
+            <td><span class="lang lang-zh">Wave 开始时</span><span class="lang lang-ja">Wave 開始時</span><span class="lang lang-en">Wave kickoff</span></td>
+            <td><span class="lang lang-zh">スコープ決定、設計方針確認（"今回の波で何を達成するか / 大方針 OK か"）</span><span class="lang lang-ja">スコープ決定、設計方針確認（"この波で何を達成するか・大方針 OK か"）</span><span class="lang lang-en">Scope decision, design-direction sign-off ("what does this wave deliver, is the approach right?")</span></td>
+          </tr>
+          <tr>
+            <td><strong>Adjudicate</strong> <span class="muted">(<span class="lang lang-zh">仲裁</span><span class="lang lang-ja">仲裁</span><span class="lang lang-en">adjudicator</span>)</span></td>
+            <td><span class="lang lang-zh">Escalation 时</span><span class="lang lang-ja">Escalation 時</span><span class="lang lang-en">on escalation</span></td>
+            <td><span class="lang lang-zh">仕様あいまい / AI が収束しない時の正解判定（曖昧仕様の確定、トレードオフの決断）</span><span class="lang lang-ja">仕様あいまい／AI が収束しない時の正解判定（曖昧仕様の確定、トレードオフの決断）</span><span class="lang lang-en">Ground truth when the spec is ambiguous or AI fails to converge (resolve ambiguity, break trade-off ties)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Accept</strong> <span class="muted">(<span class="lang lang-zh">受容</span><span class="lang lang-ja">受入</span><span class="lang lang-en">acceptor</span>)</span></td>
+            <td><span class="lang lang-zh">Gate 完全合格时</span><span class="lang lang-ja">Gate 完全合格時</span><span class="lang lang-en">when all gates pass</span></td>
+            <td><span class="lang lang-zh">Wave 完了承認（"全 sensor 緑 → 本当にリリースしてよいか" 最終 GO）</span><span class="lang lang-ja">Wave 完了承認（"全センサー緑 → 本当にリリースしてよいか"の最終 GO）</span><span class="lang lang-en">Wave completion sign-off ("all sensors green → truly ship?" final GO)</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:14px"><span class="lang lang-zh">闭环示意（Wave loop）</span><span class="lang lang-ja">クローズドループ図（Wave loop）</span><span class="lang lang-en">Closed-loop sketch (Wave loop)</span></h3>
+      <p class="muted" style="margin:.2em 0 .6em"><span class="lang lang-zh">🟡 黄框＝人の判断点 / 🔵 蓝框＝AI 自動 / 🟣 紫框＝Wave 単位</span><span class="lang lang-ja">🟡 黄＝人の判断点 / 🔵 青＝AI 自動 / 🟣 紫＝Wave 単位</span><span class="lang lang-en">🟡 yellow = human decision / 🔵 blue = AI automated / 🟣 purple = Wave unit</span></p>
+      <div class="mermaid">
+flowchart LR
+    H1(["👤 Judge<br/>scope + 方針"]):::human --> W{{"Wave<br/>(数時間〜数日)"}}:::wave
+    W --> G["🤖 Generate<br/>code + tests + docs"]:::ai
+    G --> R["🤖 Run<br/>test/cov/mut/perf/sec"]:::ai
+    R --> A["🤖 Analyze diff<br/>vs spec / baseline"]:::ai
+    A -->|"🔴 fail"| F["🤖 Re-generate<br/>(self-correct)"]:::ai
+    F --> R
+    A -->|"⚠️ ambiguous"| H2(["👤 Adjudicate<br/>正解判定"]):::human
+    H2 --> R
+    A -->|"🟢 all gates pass"| H3(["👤 Accept<br/>Wave 完了承認"]):::human
+    H3 --> M["release / next Wave"]
+    classDef human stroke:#ffd966,stroke-width:3px
+    classDef ai stroke:#7ea8ff,stroke-width:2px
+    classDef wave stroke:#c39bff,stroke-width:3px
+      </div>
+
+      <h3 style="margin-top:14px"><span class="lang lang-zh">这 3 点为什么"必须留给人"</span><span class="lang lang-ja">なぜこの 3 点だけは人に残るのか</span><span class="lang lang-en">Why exactly these 3 stay with humans</span></h3>
+      <ul>
+        <li><strong>Judge</strong> —
+          <span class="lang lang-zh">"何を作るか / 何を作らないか" は<strong>業務価値・倫理・優先順位</strong>の問題で、機械的最適化に還元できない。価値判断の最終責任は人。</span>
+          <span class="lang lang-ja">"何を作る／作らない" は<strong>業務価値・倫理・優先順位</strong>の問題で、機械的最適化に還元できない。価値判断の責任は人。</span>
+          <span class="lang lang-en">"What to build / not build" is a question of <strong>business value, ethics, and priority</strong>; not reducible to mechanical optimization.</span>
+        </li>
+        <li><strong>Adjudicate</strong> —
+          <span class="lang lang-zh">仕様の曖昧さは<strong>言語の限界</strong>に由来。AI が自己収束できない時、"これが正解" と決められるのは現場の文脈を持つ人だけ。</span>
+          <span class="lang lang-ja">仕様の曖昧さは<strong>言語の限界</strong>に由来。AI が自己収束しない時、"これが正解" と決められるのは現場文脈を持つ人だけ。</span>
+          <span class="lang lang-en">Spec ambiguity stems from the <strong>limits of language</strong>; only domain humans can declare "this is the right answer" when AI fails to converge.</span>
+        </li>
+        <li><strong>Accept</strong> —
+          <span class="lang lang-zh">"全ゲート緑" は<strong>必要条件であって十分条件ではない</strong>。リリース責任を取れるのは法的・組織的に人だけ。最終 GO は人の署名。</span>
+          <span class="lang lang-ja">"全ゲート緑" は<strong>必要条件であって十分条件ではない</strong>。リリース責任を取れるのは法的・組織的に人だけ。最終 GO は人の署名。</span>
+          <span class="lang lang-en">"All gates green" is <strong>necessary, not sufficient</strong>; legal and organizational accountability for releases sits with humans.</span>
+        </li>
+      </ul>
+
+      <h3 style="margin-top:14px"><span class="lang lang-zh">能力育成路径（起点 → 育成中 → 理想型）</span><span class="lang lang-ja">能力育成パス（起点 → 育成中 → 理想型）</span><span class="lang lang-en">Capability cultivation path (seed → growing → ideal)</span></h3>
+      <table>
+        <thead><tr>
+          <th><span class="lang lang-zh">能力</span><span class="lang lang-ja">能力</span><span class="lang lang-en">Capability</span></th>
+          <th><span class="lang lang-zh">现在 (本 demo · 起点)</span><span class="lang lang-ja">現在（本 demo・起点）</span><span class="lang lang-en">Today (this demo · seed)</span></th>
+          <th><span class="lang lang-zh">育成中 (从起点逐步喂养)</span><span class="lang lang-ja">育成中（起点から段階的に育てる）</span><span class="lang lang-en">Growing (cultivating from the seed)</span></th>
+          <th><span class="lang lang-zh">理想型 (Wave loop)</span><span class="lang lang-ja">理想型（Wave loop · 将来）</span><span class="lang lang-en">Ideal (Wave loop · future)</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="lang lang-zh">テスト生成</span><span class="lang lang-ja">テスト生成</span><span class="lang lang-en">Test generation</span></td>
+            <td><span class="lang lang-zh">人が AC を書き、AI が実装テストを補助</span><span class="lang lang-ja">人が AC を書き、AI が実装テストを補助</span><span class="lang lang-en">Humans write AC, AI assists tests</span></td>
+            <td><span class="lang lang-zh">AI が AC からテスト＋境界値＋property test を自動生成</span><span class="lang lang-ja">AI が AC からテスト＋境界値＋property test 自動生成</span><span class="lang lang-en">AI auto-generates tests + boundaries + property tests from AC</span></td>
+            <td><span class="lang lang-zh"><strong>突然変異テストで自テストを評価し自己改善</strong></span><span class="lang lang-ja"><strong>mutation testing で自テストを評価し自己改善</strong></span><span class="lang lang-en"><strong>Mutation testing self-grades its own tests</strong></span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">差分解析</span><span class="lang lang-ja">差分解析</span><span class="lang lang-en">Diff analysis</span></td>
+            <td><span class="lang lang-zh">人が PR を読む</span><span class="lang lang-ja">人が PR を読む</span><span class="lang lang-en">Humans read PRs</span></td>
+            <td><span class="lang lang-zh">reviewer subagent が一次レビュー、人は確認</span><span class="lang lang-ja">reviewer subagent が一次レビュー、人は確認</span><span class="lang lang-en">Reviewer subagent triages, humans confirm</span></td>
+            <td><span class="lang lang-zh"><strong>spec / baseline 自動比較で人は escalation のみ</strong></span><span class="lang lang-ja"><strong>spec / baseline 自動比較。人は escalation のみ</strong></span><span class="lang lang-en"><strong>Auto-compared to spec/baseline; humans only on escalation</strong></span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">再生成</span><span class="lang lang-ja">再生成</span><span class="lang lang-en">Regen</span></td>
+            <td><span class="lang lang-zh">失敗時に人が指示し直す</span><span class="lang lang-ja">失敗時に人が指示し直す</span><span class="lang lang-en">Humans re-prompt on fail</span></td>
+            <td><span class="lang lang-zh">自動再試行（コンテキスト調整）</span><span class="lang lang-ja">自動再試行（文脈調整）</span><span class="lang lang-en">Auto-retry with context tweaks</span></td>
+            <td><span class="lang lang-zh"><strong>収束しない場合のみ Adjudicate にエスカレ</strong></span><span class="lang lang-ja"><strong>収束しない時のみ Adjudicate にエスカレ</strong></span><span class="lang lang-en"><strong>Escalate to Adjudicate only when not converging</strong></span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">性能 / 安全</span><span class="lang lang-ja">性能 / セキュリティ</span><span class="lang lang-en">Perf / sec</span></td>
+            <td><span class="lang lang-zh">CI で lint + secret-scan</span><span class="lang lang-ja">CI で lint + secret-scan</span><span class="lang lang-en">CI lint + secret-scan</span></td>
+            <td><span class="lang lang-zh">load test + SAST/DAST 自動化</span><span class="lang lang-ja">load test + SAST/DAST 自動化</span><span class="lang lang-en">Load tests + SAST/DAST automated</span></td>
+            <td><span class="lang lang-zh"><strong>perf budget / threat model も sensor 化、ゲート不通過は自動 reject</strong></span><span class="lang lang-ja"><strong>perf budget / threat model も sensor 化、不通過は自動 reject</strong></span><span class="lang lang-en"><strong>Perf budgets / threat models become sensors; failures auto-reject</strong></span></td>
+          </tr>
+          <tr>
+            <td><span class="lang lang-zh">ドキュメント</span><span class="lang lang-ja">ドキュメント</span><span class="lang lang-en">Docs</span></td>
+            <td><span class="lang lang-zh">spec / ADR は人＋ AI</span><span class="lang lang-ja">spec / ADR は人＋ AI</span><span class="lang lang-en">Spec/ADR human+AI</span></td>
+            <td><span class="lang lang-zh">変更ログ・API doc・runbook 自動更新</span><span class="lang lang-ja">変更ログ・API doc・runbook 自動更新</span><span class="lang lang-en">Changelog/API docs/runbook auto-updated</span></td>
+            <td><span class="lang lang-zh"><strong>spec ⇄ code ⇄ docs の三方向整合を harness が常時保証</strong></span><span class="lang lang-ja"><strong>spec ⇄ code ⇄ docs 三方向整合を harness が常時保証</strong></span><span class="lang lang-en"><strong>Harness keeps spec ⇄ code ⇄ docs in three-way sync</strong></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:14px"><span class="lang lang-zh">为此今天该做什么</span><span class="lang lang-ja">そのために今すべきこと</span><span class="lang lang-en">What to do today</span></h3>
+      <ul>
+        <li>
+          <span class="lang lang-zh">① <strong>受容基準を機械検証可能に書く</strong>習慣（本 demo の AC-1〜AC-8 と pytest の対応がそのまま雛形）。</span>
+          <span class="lang lang-ja">① <strong>受容基準を機械検証可能に書く</strong>習慣（本 demo の AC-1〜AC-8 と pytest の対応が雛形）。</span>
+          <span class="lang lang-en">① Train the habit of writing <strong>machine-checkable acceptance criteria</strong> (AC-1…AC-8 ↔ pytest in this demo is the template).</span>
+        </li>
+        <li>
+          <span class="lang lang-zh">② <strong>sensor の数と精度を増やす</strong>（mutation / coverage / perf / SAST）。判定可能な品質が広いほど人の介入は減る。</span>
+          <span class="lang lang-ja">② <strong>sensor の数と精度を増やす</strong>（mutation / coverage / perf / SAST）。判定可能な品質が広いほど人の介入は減る。</span>
+          <span class="lang lang-en">② <strong>Add more, sharper sensors</strong> (mutation / coverage / perf / SAST). The wider the mechanically-decidable surface, the less humans need step in.</span>
+        </li>
+        <li>
+          <span class="lang lang-zh">③ <strong>Escalation プロトコルを定義</strong>：AI が "判断不能" を宣言する条件と、Adjudicate に渡すべき情報パッケージ。</span>
+          <span class="lang lang-ja">③ <strong>Escalation プロトコルを定義</strong>：AI が "判断不能" を宣言する条件と、Adjudicate に渡す情報パッケージ。</span>
+          <span class="lang lang-en">③ <strong>Define an escalation protocol</strong>: when AI declares "I cannot decide," and what bundle is handed to the human Adjudicator.</span>
+        </li>
+        <li>
+          <span class="lang lang-zh">④ <strong>"全 sensor 緑" を本当に信頼できるよう、sensor 自体を eval する</strong>（突然変異 / 回帰基線 / カナリア）。</span>
+          <span class="lang lang-ja">④ <strong>"全 sensor 緑" を本当に信頼できるよう sensor 自体を eval</strong>（mutation / 回帰基線 / カナリア）。</span>
+          <span class="lang lang-en">④ <strong>Evaluate the sensors themselves</strong> (mutation, regression baselines, canaries) so "all green" is actually trustworthy.</span>
+        </li>
+      </ul>
+
+      <p class="muted" style="margin-top:10px">
+        <span class="lang lang-zh">→ 今天我们做的 harness 工程，正是<strong>把"机械可判定"的部分越扩越大</strong>，最终留给人的就只剩 Judge / Adjudicate / Accept。本 demo 是这条路上的<strong>第一公里</strong>。</span>
+        <span class="lang lang-ja">→ 今やっている harness エンジニアリングは、まさに<strong>"機械判定可能"な領域を拡げていく作業</strong>。最終的に人に残るのは Judge / Adjudicate / Accept のみ。本 demo はその道の<strong>最初の 1 km</strong>。</span>
+        <span class="lang lang-en">→ Harness engineering today is precisely the work of <strong>expanding the mechanically-decidable surface</strong>. What ultimately remains for humans is Judge / Adjudicate / Accept. This demo is <strong>kilometer one</strong> of that road.</span>
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p data-i18n="footer">教学演讲材料 · 静态站点 · 内容核实于 2026-05，带版本号/数字的条目请以最新官方信息为准。</p>
+    </footer>
+  </main>
+</div>
+
+<div class="present-hint"><span data-i18n="present.hint">方向键 / 空格 翻屏 · Esc 退出</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  if (!window.mermaid) return;
+  var blocks = [].slice.call(document.querySelectorAll(".mermaid"));
+  blocks.forEach(function (b) { b.dataset.src = b.textContent; });
+  function render() {
+    var light = document.documentElement.getAttribute("data-theme") === "light";
+    mermaid.initialize({ startOnLoad: false, theme: light ? "default" : "dark",
+      themeVariables: { fontFamily: "inherit", fontSize: "15px" }, flowchart: { curve: "basis" } });
+    blocks.forEach(function (b) { b.removeAttribute("data-processed"); b.innerHTML = b.dataset.src; });
+    try { mermaid.run({ nodes: blocks }); } catch (e) { try { mermaid.init(undefined, blocks); } catch (e2) {} }
+  }
+  render();
+  document.addEventListener("themechange", render);
+})();
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>参照 · References | 生成 AI × 开发</title>
+<meta name="description" content="生成 AI 开发全体像的具体参照链接：官方文档、Agent 框架、CLI 工具、互操作协议、harness 工程、规格驱动开发等。">
+<script>(function(){try{var d=document.documentElement,s=localStorage;var t=s.getItem('site_theme');if(t)d.setAttribute('data-theme',t);var f=s.getItem('site_fs');if(f)d.setAttribute('data-fs',f);var l=s.getItem('site_lang');if(l){d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':l);}}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" aria-label="menu">☰</button>
+  <span class="brand" data-i18n="brand">生成 AI × 开发 · 全体像</span>
+  <nav class="topnav">
+    <a href="index.html" data-i18n="nav.home">全体像</a>
+    <a href="part1.html" data-i18n="nav.part1">1 · 应用方式</a>
+    <a href="part2.html" data-i18n="nav.part2">2 · 定制与标准</a>
+    <a href="part3.html" data-i18n="nav.part3">3 · 变迁与展望</a>
+    <a href="demo.html" data-i18n="nav.demo">事例</a>
+    <a href="references.html" class="active" data-i18n="nav.refs">参照</a>
+  </nav>
+  <div class="topbar-tools">
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="zh">中</button><button data-lang="ja">日</button><button data-lang="en">EN</button>
+    </div>
+    <div class="lang-switch fs-switch" role="group" aria-label="font size">
+      <button data-fs="s" title="Small font">A</button><button data-fs="m" title="Medium font">A</button><button data-fs="l" title="Large font">A</button>
+    </div>
+    <button class="icon-btn theme-toggle" aria-label="toggle theme" title="Light / Dark">☀</button>
+    <button class="present-toggle" aria-pressed="false"><span class="dot"></span><span data-i18n="present.on">演讲模式</span></button>
+  </div>
+</header>
+<div class="scroll-progress"></div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4 data-i18n="toc">本页目录</h4>
+    <a href="#api">LLM API</a>
+    <a href="#frameworks">Agent <span class="lang lang-zh">框架</span><span class="lang lang-ja">FW</span><span class="lang lang-en">frameworks</span></a>
+    <a href="#cli">CLI</a>
+    <a href="#assistants"><span class="lang lang-zh">新型助手</span><span class="lang lang-ja">新型</span><span class="lang lang-en">assistants</span></a>
+    <a href="#protocols"><span class="lang lang-zh">协议</span><span class="lang lang-ja">プロトコル</span><span class="lang lang-en">protocols</span></a>
+    <a href="#harness">Harness</a>
+    <a href="#sdd">SDD</a>
+    <a href="#ops">AgentOps</a>
+  </aside>
+
+  <main class="content">
+    <section id="api" class="section">
+      <span class="eyebrow">References</span>
+      <h2 class="section-title"><span class="lang lang-zh">具体参照</span><span class="lang lang-ja">参照リンク</span><span class="lang lang-en">References</span></h2>
+      <p class="muted"><span class="lang lang-zh">维护者用的全量「参考摘要」（含事实与核实日期）见仓库内 <code>REFERENCES.md</code>。下面是面向观众的精简入口。核实于 2026-05。</span><span class="lang lang-ja">保守者向けの完全な「参考サマリ」（事実・核実日付付き）はリポジトリの <code>REFERENCES.md</code>。以下は受講者向けの簡易リンク。2026-05 時点。</span><span class="lang lang-en">A full maintainer "reference summary" (facts + verification dates) lives in <code>REFERENCES.md</code> in the repo. Below is the audience-facing shortlist. Verified 2026-05.</span></p>
+      <h3>LLM API <span class="muted" style="font-weight:400">· built-in tools</span></h3>
+      <ul>
+        <li><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic / Claude docs</a> — messages, tool use, web search, code execution, computer use</li>
+        <li><a href="https://platform.openai.com/docs" target="_blank" rel="noopener">OpenAI API docs</a></li>
+      </ul>
+    </section>
+
+    <section id="frameworks" class="section">
+      <h3>Agent <span class="lang lang-zh">框架 / SDK</span><span class="lang lang-ja">フレームワーク / SDK</span><span class="lang lang-en">frameworks / SDKs</span></h3>
+      <ul>
+        <li><a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noopener">LangGraph</a> · <a href="https://github.com/anthropics/claude-agent-sdk-python" target="_blank" rel="noopener">Claude Agent SDK</a> · <a href="https://github.com/crewAIInc/crewAI" target="_blank" rel="noopener">CrewAI</a> · LlamaIndex · Semantic Kernel · AutoGen</li>
+        <li><a href="https://github.com/Zijian-Ni/awesome-ai-agents-2026" target="_blank" rel="noopener">awesome-ai-agents-2026</a> — <span class="lang lang-zh">年度全景清单</span><span class="lang lang-ja">年次ランドスケープ</span><span class="lang lang-en">annual landscape</span></li>
+      </ul>
+    </section>
+
+    <section id="cli" class="section">
+      <h3>CLI / <span class="lang lang-zh">编码 agent</span><span class="lang lang-ja">コーディング agent</span><span class="lang lang-en">coding agents</span></h3>
+      <ul><li>Claude Code · Codex · GitHub Copilot CLI · OpenCode <span class="muted">— <span class="lang lang-zh">「终端式 agent」类别代表</span><span class="lang lang-ja">「ターミナル型 agent」の代表</span><span class="lang lang-en">representative "terminal agents"</span></span></li></ul>
+      <h4 style="margin-top:.6em;">Claude Code <span class="lang lang-zh">官方文档（harness 实现要素）</span><span class="lang lang-ja">公式ドキュメント（harness 実装の要素）</span><span class="lang lang-en">official docs (harness building blocks)</span></h4>
+      <ul>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/hooks" target="_blank" rel="noopener">Hooks</a> — PreToolUse / PostToolUse / UserPromptSubmit などで強制ゲート</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/sub-agents" target="_blank" rel="noopener">Subagents</a> — 役割別エージェント・モデル指定・委譲</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/skills" target="_blank" rel="noopener">Skills</a> — SKILL.md + references で再利用可能な手順を配布</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/slash-commands" target="_blank" rel="noopener">Slash commands</a> — `/spec` `/design` 等のフェーズコマンド</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/output-styles" target="_blank" rel="noopener">Output styles</a> — レビュー観点等の出力整形</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/statusline" target="_blank" rel="noopener">Status line</a> — モデル / ブランチ / モード可視化</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/mcp" target="_blank" rel="noopener">MCP</a> — オンプレ DB / 社内 doc を agent に接続</li>
+        <li><a href="https://docs.claude.com/en/docs/claude-code/plugins" target="_blank" rel="noopener">Plugins</a> — 配布可能なバンドル</li>
+        <li><a href="https://agents.md/" target="_blank" rel="noopener">AGENTS.md</a> — agent 共通の権威メモリ仕様</li>
+      </ul>
+    </section>
+
+    <section id="assistants" class="section">
+      <h3><span class="lang lang-zh">新型 AI 助手</span><span class="lang lang-ja">新型 AI アシスタント</span><span class="lang lang-en">New AI assistants</span></h3>
+      <ul>
+        <li><a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">OpenClaw</a> — <span class="lang lang-zh">自托管、多通道、自写技能</span><span class="lang lang-ja">セルフホスト・マルチチャネル・スキル自作</span><span class="lang lang-en">self-hosted, multi-channel, writes its own skills</span></li>
+        <li><a href="https://hermes-agent.nousresearch.com/" target="_blank" rel="noopener">Hermes Agent</a> (Nous Research) — <span class="lang lang-zh">闭环学习、200+ 模型</span><span class="lang lang-ja">閉ループ学習・200+ モデル</span><span class="lang lang-en">closed learning loop, 200+ models</span></li>
+      </ul>
+    </section>
+
+    <section id="protocols" class="section">
+      <h3><span class="lang lang-zh">Agent 互操作协议</span><span class="lang lang-ja">相互運用プロトコル</span><span class="lang lang-en">Interop protocols</span></h3>
+      <ul>
+        <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">MCP</a> <span class="pill blue">agent ↔ tools</span></li>
+        <li><a href="https://a2a-protocol.org/" target="_blank" rel="noopener">A2A</a> <span class="pill purple">agent ↔ agent</span> — Google → Linux Foundation · <a href="https://codelabs.developers.google.com/intro-a2a-purchasing-concierge" target="_blank" rel="noopener">codelab</a></li>
+        <li><a href="https://github.com/i-am-bee/acp" target="_blank" rel="noopener">ACP</a> / <a href="https://framework.beeai.dev/" target="_blank" rel="noopener">BeeAI</a> <span class="pill purple">agent ↔ agent</span></li>
+        <li><a href="https://docs.ag-ui.com/" target="_blank" rel="noopener">AG-UI</a> <span class="pill cyan">agent ↔ UI</span> (CopilotKit)</li>
+        <li><a href="https://arxiv.org/abs/2505.02279" target="_blank" rel="noopener">arXiv:2505.02279</a> — survey of MCP / ACP / A2A / ANP</li>
+      </ul>
+    </section>
+
+    <section id="harness" class="section">
+      <h3>Harness <span class="lang lang-zh">工程</span><span class="lang lang-ja">エンジニアリング</span><span class="lang lang-en">engineering</span></h3>
+      <ul>
+        <li><a href="https://martinfowler.com/articles/harness-engineering.html" target="_blank" rel="noopener">Martin Fowler — Harness engineering for coding agent users</a></li>
+        <li><a href="https://www.thoughtworks.com/en-us/insights/blog/generative-ai/harness-engineering-agent-feedback-exploring-ai-coding-sensors" target="_blank" rel="noopener">Thoughtworks — agent feedback &amp; AI coding sensors</a></li>
+        <li><a href="https://github.com/ai-boost/awesome-harness-engineering" target="_blank" rel="noopener">awesome-harness-engineering</a></li>
+      </ul>
+    </section>
+
+    <section id="sdd" class="section">
+      <h3>Spec-Driven Development</h3>
+      <ul>
+        <li><a href="https://sddbook.com/" target="_blank" rel="noopener">sddbook.com</a> · <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a> · AWS Kiro · OpenSpec</li>
+        <li><a href="https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents/" target="_blank" rel="noopener">DeepLearning.AI — Spec-Driven Development with Coding Agents</a></li>
+      </ul>
+    </section>
+
+    <section id="ops" class="section">
+      <h3>AgentOps / <span class="lang lang-zh">可观测 &amp; 上下文工程</span><span class="lang lang-ja">可観測 &amp; コンテキスト工学</span><span class="lang lang-en">observability &amp; context engineering</span></h3>
+      <ul>
+        <li><a href="https://opentelemetry.io/" target="_blank" rel="noopener">OpenTelemetry</a> · <a href="https://langfuse.com/" target="_blank" rel="noopener">Langfuse</a> · <a href="https://arize.com/" target="_blank" rel="noopener">Arize Phoenix</a></li>
+        <li><span class="lang lang-zh">RAG 家族：Agentic RAG / GraphRAG / Contextual Retrieval（见 Part 1 前沿小节）</span><span class="lang lang-ja">RAG ファミリー：Agentic RAG / GraphRAG / Contextual Retrieval</span><span class="lang lang-en">RAG family: Agentic RAG / GraphRAG / Contextual Retrieval (see Part 1 frontier)</span></li>
+      </ul>
+      <footer class="footer"><p data-i18n="footer">教学演讲材料 · 静态站点 · 内容核实于 2026-05，带版本号/数字的条目请以最新官方信息为准。</p></footer>
+    </section>
+  </main>
+</div>
+
+<div class="present-hint"><span data-i18n="present.hint">方向键 / 空格 翻屏 · Esc 退出</span></div>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

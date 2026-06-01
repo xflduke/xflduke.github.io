@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 1 · LLM 基础应用方式 | Ways to Use LLMs</title>
+<meta name="description" content="LLM 的六种应用形态：网页 Chat、API（含内置功能）、Agent、CLI、IDE 集成、持久化助手，含模拟 demo 与前沿最佳实践。">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script>(function(){try{var d=document.documentElement,s=localStorage;var t=s.getItem('site_theme');if(t)d.setAttribute('data-theme',t);var f=s.getItem('site_fs');if(f)d.setAttribute('data-fs',f);var l=s.getItem('site_lang');if(l){d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':l);}}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" aria-label="menu">☰</button>
+  <span class="brand" data-i18n="brand">生成 AI × 开发 · 全体像</span>
+  <nav class="topnav">
+    <a href="index.html" data-i18n="nav.home">全体像</a>
+    <a href="part1.html" class="active" data-i18n="nav.part1">1 · 应用方式</a>
+    <a href="part2.html" data-i18n="nav.part2">2 · 定制与标准</a>
+    <a href="part3.html" data-i18n="nav.part3">3 · 变迁与展望</a>
+    <a href="demo.html" data-i18n="nav.demo">事例</a>
+    <a href="references.html" data-i18n="nav.refs">参照</a>
+  </nav>
+  <div class="topbar-tools">
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="zh">中</button><button data-lang="ja">日</button><button data-lang="en">EN</button>
+    </div>
+    <div class="lang-switch fs-switch" role="group" aria-label="font size">
+      <button data-fs="s" title="Small font">A</button><button data-fs="m" title="Medium font">A</button><button data-fs="l" title="Large font">A</button>
+    </div>
+    <button class="icon-btn theme-toggle" aria-label="toggle theme" title="Light / Dark">☀</button>
+    <button class="present-toggle" aria-pressed="false"><span class="dot"></span><span data-i18n="present.on">演讲模式</span></button>
+  </div>
+</header>
+<div class="scroll-progress"></div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4 data-i18n="toc">本页目录</h4>
+    <a href="#intro"><span class="lang lang-zh">概览</span><span class="lang lang-ja">概要</span><span class="lang lang-en">Overview</span></a>
+    <a href="#chat">1 · <span class="lang lang-zh">网页 Chat</span><span class="lang lang-ja">Web Chat</span><span class="lang lang-en">Web Chat</span></a>
+    <a href="#api">2 · API</a>
+    <a href="#builtin">2b · <span class="lang lang-zh">内置功能</span><span class="lang lang-ja">組込み機能</span><span class="lang lang-en">Built-in Tools</span></a>
+    <a href="#agent">3 · Agent</a>
+    <a href="#cli">4 · CLI</a>
+    <a href="#ide">5 · IDE</a>
+    <a href="#emerging">6 · <span class="lang lang-zh">新兴助手</span><span class="lang lang-ja">新型アシスタント</span><span class="lang lang-en">New Assistants</span></a>
+    <a href="#compare"><span class="lang lang-zh">对比与选择</span><span class="lang lang-ja">比較と選択</span><span class="lang lang-en">Compare &amp; Choose</span></a>
+    <a href="#frontier"><span class="lang lang-zh">前沿与最佳实践</span><span class="lang lang-ja">最前線とベストプラクティス</span><span class="lang lang-en">Frontier</span></a>
+  </aside>
+
+  <main class="content">
+
+    <!-- 概览 -->
+    <section id="intro" class="section">
+      <span class="eyebrow">Part 1</span>
+      <h2 class="section-title"><span class="lang lang-zh">LLM 的基础应用方式</span><span class="lang lang-ja">LLM の基本的な活用方法</span><span class="lang lang-en">Ways to Use LLMs</span></h2>
+      <p class="lead">
+        <span class="lang lang-zh">同一个模型，可以用六种很不一样的方式接入工作。控制力、自动化程度、上手难度各有取舍——先建立全景，再逐一上手。</span>
+        <span class="lang lang-ja">同じモデルでも、6 つの異なる形で仕事に組み込めます。制御性・自動化・学習コストはそれぞれトレードオフ。まず全体像を、それから一つずつ。</span>
+        <span class="lang lang-en">The same model plugs into your work in six quite different ways. Each trades off control, autonomy, and learning curve. Get the panorama first, then try each.</span>
+      </p>
+      <div class="figure">
+        <img class="theme-dark" src="assets/img/part1-modes.png" alt="Six ways to use LLMs" data-ph="六种应用形态拼贴（gpt-image-2 生成）">
+        <img class="theme-light" src="assets/img/part1-modes-light.png" alt="Six ways to use LLMs" data-ph="六种应用形态拼贴 · 浅色">
+      </div>
+    </section>
+
+    <!-- 1. Chat -->
+    <section id="chat" class="section">
+      <span class="eyebrow">Mode 1 · Web Chat</span>
+      <h2 class="section-title"><span class="lang lang-zh">网页版 Chat</span><span class="lang lang-ja">Web 版 Chat</span><span class="lang lang-en">Web Chat</span></h2>
+      <p class="lead"><span class="lang lang-zh">浏览器里直接对话。零门槛、最直观，适合问答、起草、头脑风暴；缺点是难以自动化、难接入系统。</span><span class="lang lang-ja">ブラウザで直接対話。ゼロ障壁で直感的。Q&amp;A・下書き・ブレストに最適。自動化やシステム連携は苦手。</span><span class="lang lang-en">Talk in the browser. Zero setup, most intuitive — great for Q&amp;A, drafting, brainstorming. Hard to automate or wire into systems.</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">随叫随到的助手对话——你问，它答。</span><span class="lang lang-ja">いつでも呼べるアシスタントとの会話——聞けば答える。</span><span class="lang lang-en">A conversation with an on-call assistant — you ask, it answers.</span></div>
+      <div class="demo" data-demo="chat">
+        <div class="demo-head">
+          <span class="demo-title">demo · chat</span>
+          <button class="btn"><span class="lang lang-zh">发送示例</span><span class="lang lang-ja">送信</span><span class="lang lang-en">Send</span></button>
+        </div>
+        <div class="chat"></div>
+      </div>
+    </section>
+
+    <!-- 2. API -->
+    <section id="api" class="section">
+      <span class="eyebrow">Mode 2 · API</span>
+      <h2 class="section-title"><span class="lang lang-zh">API 调用</span><span class="lang lang-ja">API 呼び出し</span><span class="lang lang-en">API Calls</span></h2>
+      <p class="lead"><span class="lang lang-zh">把模型当成一个可编程的服务：你发请求，它回结构化结果。可批量、可集成、可流式输出，是所有上层应用的地基。</span><span class="lang lang-ja">モデルをプログラム可能なサービスとして扱う：リクエストを送り、構造化結果を受け取る。バッチ・統合・ストリーミング対応で、上位アプリの土台。</span><span class="lang lang-en">Treat the model as a programmable service: send a request, get a structured result. Batchable, integratable, streamable — the foundation of every higher-level app.</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">点外卖——按菜单下单，准时送达。</span><span class="lang lang-ja">出前の注文——メニューから頼めば届く。</span><span class="lang lang-en">Ordering takeout — order from a menu, it arrives.</span></div>
+      <div class="demo" data-demo="api">
+        <div data-tabs>
+          <div class="tabs">
+            <button class="tab-btn active">curl</button><button class="tab-btn">Python</button><button class="tab-btn">TypeScript</button>
+          </div>
+          <div class="tab-panes">
+            <div class="pane active"><pre><code>curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-…",
+    "max_tokens": 256,
+    "messages": [{"role":"user","content":"Explain RAG"}]
+  }'</code></pre></div>
+            <div class="pane"><pre><code>from anthropic import Anthropic
+client = Anthropic()
+msg = client.messages.create(
+    model="claude-…",
+    max_tokens=256,
+    messages=[{"role": "user", "content": "Explain RAG"}],
+)
+print(msg.content[0].text)</code></pre></div>
+            <div class="pane"><pre><code>import Anthropic from "@anthropic-ai/sdk";
+const client = new Anthropic();
+const msg = await client.messages.create({
+  model: "claude-…",
+  max_tokens: 256,
+  messages: [{ role: "user", content: "Explain RAG" }],
+});
+console.log(msg.content[0].text);</code></pre></div>
+          </div>
+        </div>
+        <div class="demo-head" style="margin-top:14px">
+          <span class="demo-title">simulated response</span>
+          <button class="btn"><span class="lang lang-zh">发送请求（模拟流式）</span><span class="lang lang-ja">送信（疑似ストリーム）</span><span class="lang lang-en">Send (simulated stream)</span></button>
+        </div>
+        <pre><code class="api-out"><span class="lang lang-zh">// 点上方按钮查看模拟的流式 JSON 响应</span><span class="lang lang-ja">// 上のボタンで疑似ストリーミング応答を表示</span><span class="lang lang-en">// Click above to see a simulated streaming JSON response</span></code></pre>
+      </div>
+    </section>
+
+    <!-- 2b. 内置功能 -->
+    <section id="builtin" class="section">
+      <span class="eyebrow">Mode 2b · Provider Built-in Tools</span>
+      <h2 class="section-title"><span class="lang lang-zh">Provider 内置功能</span><span class="lang lang-ja">プロバイダ組込み機能</span><span class="lang lang-en">Provider Built-in Tools</span></h2>
+      <p class="lead"><span class="lang lang-zh">很多能力厂商已在 API/平台层「开箱即用」。关键区分：<b>大多在服务端</b>（厂商替你跑），而 <b>computer use 属客户端执行</b>——模型只负责决策，由<b>你的程序/环境</b>实际操作并回传结果。</span><span class="lang lang-ja">多くはプロバイダが API/プラットフォーム層で「すぐ使える」形で提供。要点：<b>多くはサーバ側</b>（プロバイダが代行）だが、<b>computer use はクライアント実行</b>——モデルは判断のみ、実操作と結果返却は<b>自分の環境</b>。</span><span class="lang lang-en">Many capabilities ship "out of the box" at the provider layer. Key distinction: <b>most run server-side</b> (the provider runs them for you), but <b>computer use is client-executed</b> — the model only decides; <b>your app/environment</b> performs the actions and returns the result.</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">自带工具的瑞士军刀——不用另外配齐。</span><span class="lang lang-ja">道具付きのアーミーナイフ——別途揃える必要がない。</span><span class="lang lang-en">A Swiss-army knife with tools built in — nothing extra to assemble.</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th><span class="lang lang-zh">能力</span><span class="lang lang-ja">機能</span><span class="lang lang-en">Capability</span></th>
+          <th><span class="lang lang-zh">在哪运行</span><span class="lang lang-ja">実行場所</span><span class="lang lang-en">Runs where</span></th>
+          <th><span class="lang lang-zh">说明</span><span class="lang lang-ja">説明</span><span class="lang lang-en">Notes</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td><code>web_search</code></td><td><span class="pill good"><span class="lang lang-zh">服务端</span><span class="lang lang-ja">サーバ</span><span class="lang lang-en">server</span></span></td><td><span class="lang lang-zh">厂商代你联网检索，回答附来源。</span><span class="lang lang-ja">プロバイダが検索、出典付き。</span><span class="lang lang-en">Provider searches the web, returns cited answers.</span></td></tr>
+          <tr><td><code>code_execution</code></td><td><span class="pill good"><span class="lang lang-zh">服务端</span><span class="lang lang-ja">サーバ</span><span class="lang lang-en">server</span></span></td><td><span class="lang lang-zh">厂商托管沙箱里跑代码/算数据。</span><span class="lang lang-ja">プロバイダ管理のサンドボックスで実行。</span><span class="lang lang-en">Runs in the provider's hosted sandbox.</span></td></tr>
+          <tr><td><span class="lang lang-zh">文件检索 / retrieval</span><span class="lang lang-ja">ファイル検索 / retrieval</span><span class="lang lang-en">file search / retrieval</span></td><td><span class="pill good"><span class="lang lang-zh">服务端</span><span class="lang lang-ja">サーバ</span><span class="lang lang-en">server</span></span></td><td><span class="lang lang-zh">厂商托管检索 / 向量库。</span><span class="lang lang-ja">プロバイダ管理の検索 / ベクトル。</span><span class="lang lang-en">Provider-hosted retrieval / vector store.</span></td></tr>
+          <tr><td><span class="lang lang-zh">结构化输出 / JSON</span><span class="lang lang-ja">構造化出力 / JSON</span><span class="lang lang-en">structured output / JSON</span></td><td><span class="pill good"><span class="lang lang-zh">服务端</span><span class="lang lang-ja">サーバ</span><span class="lang lang-en">server</span></span></td><td><span class="lang lang-zh">解码期约束输出格式。</span><span class="lang lang-ja">デコード時に出力を制約。</span><span class="lang lang-en">Constrained decoding enforces the schema.</span></td></tr>
+          <tr><td><span class="lang lang-zh">视觉 / 多模态</span><span class="lang lang-ja">視覚 / マルチモーダル</span><span class="lang lang-en">vision / multimodal</span></td><td><span class="pill good"><span class="lang lang-zh">服务端</span><span class="lang lang-ja">サーバ</span><span class="lang lang-en">server</span></span></td><td><span class="lang lang-zh">模型自带能力。</span><span class="lang lang-ja">モデル本体の能力。</span><span class="lang lang-en">A built-in model capability.</span></td></tr>
+          <tr><td><code>computer_use</code></td><td><span class="pill warn"><span class="lang lang-zh">客户端执行</span><span class="lang lang-ja">クライアント実行</span><span class="lang lang-en">client-executed</span></span></td><td><span class="lang lang-zh">模型给出动作（点按/截图），<b>由你的机器/VM 执行并回传截图</b>。</span><span class="lang lang-ja">モデルが動作（クリック/撮影）を指示、<b>自分のマシン/VM が実行し画面を返す</b>。</span><span class="lang lang-en">Model emits actions (click/screenshot); <b>your machine/VM executes them and returns screenshots</b>.</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="demo" data-demo="builtin">
+        <div class="demo-head">
+          <span class="demo-title">demo · web_search</span>
+          <button class="btn"><span class="lang lang-zh">运行</span><span class="lang lang-ja">実行</span><span class="lang lang-en">Run</span></button>
+        </div>
+        <div class="agent-steps"></div>
+      </div>
+    </section>
+
+    <!-- 3. Agent -->
+    <section id="agent" class="section">
+      <span class="eyebrow">Mode 3 · Agent (Frameworks / SDKs)</span>
+      <h2 class="section-title"><span class="lang lang-zh">Agent 使用（框架 / SDK）</span><span class="lang lang-ja">Agent 活用（フレームワーク / SDK）</span><span class="lang lang-en">Agents (Frameworks / SDKs)</span></h2>
+      <p class="lead"><span class="lang lang-zh">让模型自己「思考 → 调用工具 → 观察结果 → 再思考」，循环若干步直到完成任务。这就是 ReAct 循环，也是各类 Agent 框架的核心。</span><span class="lang lang-ja">モデル自身が「思考 → ツール呼出 → 観察 → 再思考」を数ステップ繰り返してタスクを完遂。これが ReAct ループであり、各種 Agent フレームワークの核。</span><span class="lang lang-en">Let the model loop: "think → call a tool → observe → think again," repeating until the task is done. This is the ReAct loop — the heart of agent frameworks.</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">会自己跑腿的员工——给目标，它自己想办法、用工具、交结果。</span><span class="lang lang-ja">自分で動く社員——目標を渡せば、考え・道具を使い・結果を出す。</span><span class="lang lang-en">An employee who runs errands — give a goal, it figures out the steps, uses tools, delivers.</span></div>
+      <div class="demo" data-demo="agent">
+        <div class="demo-head">
+          <span class="demo-title">demo · ReAct loop</span>
+          <button class="btn"><span class="lang lang-zh">运行循环</span><span class="lang lang-ja">ループ実行</span><span class="lang lang-en">Run loop</span></button>
+        </div>
+        <div class="agent-steps"></div>
+      </div>
+      <details class="expand">
+        <summary><span class="lang lang-zh">展开「内部细节」：看见 thinking 与 function call 的原始内容</span><span class="lang lang-ja">「内部詳細」を展開：thinking と function call の生データ</span><span class="lang lang-en">Expand "internals": raw thinking &amp; function-call</span></summary>
+        <div class="body">
+          <p class="muted"><span class="lang lang-zh">Agent 不是黑盒。一次循环里，模型真正产生的是这些结构化内容：</span><span class="lang lang-ja">Agent はブラックボックスではない。1 ループでモデルが実際に生成するのは次の構造化データ：</span><span class="lang lang-en">An agent isn't a black box. In one loop, the model actually emits these structured blocks:</span></p>
+          <pre><code>// ① reasoning / thinking block（模型的推理，可被隐藏或展示）
+{ "type": "thinking",
+  "text": "Need current weather for Tokyo before answering." }
+
+// ② tool_use —— 模型发出的函数调用（结构化 JSON）
+{ "type": "tool_use", "id": "toolu_01A…",
+  "name": "get_weather",
+  "input": { "city": "Tokyo" } }
+
+// ③ tool_result —— 运行环境把工具返回喂回模型
+{ "type": "tool_result", "tool_use_id": "toolu_01A…",
+  "content": { "temp_c": 14, "condition": "light rain" } }
+
+// ④ 模型据此产生最终文本回答
+{ "type": "text",
+  "text": "It's 14°C with light rain in Tokyo — bring an umbrella." }</code></pre>
+        </div>
+      </details>
+      <p class="muted" style="font-size:13px"><span class="lang lang-zh">框架类别（不绑定具体项目）：编排型（图/状态机）、多 agent「编队」、轻量 SDK。</span><span class="lang lang-ja">フレームワークの種類（特定製品に限らず）：オーケストレーション型（グラフ/状態機械）、マルチ agent「編隊」、軽量 SDK。</span><span class="lang lang-en">Framework categories (not specific products): orchestration (graphs/state machines), multi-agent "fleets," lightweight SDKs.</span></p>
+    </section>
+
+    <!-- 4. CLI -->
+    <section id="cli" class="section">
+      <span class="eyebrow">Mode 4 · Terminal Agent</span>
+      <h2 class="section-title"><span class="lang lang-zh">CLI / 终端式 Agent</span><span class="lang lang-ja">CLI / ターミナル型 Agent</span><span class="lang lang-en">CLI / Terminal Agent</span></h2>
+      <p class="lead"><span class="lang lang-zh">在终端里运行的编码 agent：用自然语言下任务，它读文件、改代码、跑命令。终端原生、可脚本化、易接入 CI——这是一种通用形态（代表性如 Claude Code、Codex、Copilot CLI、OpenCode 等同类工具）。</span><span class="lang lang-ja">ターミナルで動くコーディング agent：自然語でタスクを渡すと、ファイルを読み・コードを直し・コマンドを実行。ターミナルネイティブで、スクリプト化・CI 連携が容易——汎用形態（代表例: Claude Code、Codex、Copilot CLI、OpenCode 等）。</span><span class="lang lang-en">A coding agent that runs in the terminal: hand it a task in natural language and it reads files, edits code, runs commands. Terminal-native, scriptable, CI-friendly — a general form (e.g. Claude Code, Codex, Copilot CLI, OpenCode).</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">命令行里的结对程序员。</span><span class="lang lang-ja">コマンドラインのペアプロ相手。</span><span class="lang lang-en">A pair programmer who lives in your command line.</span></div>
+      <div class="demo" data-demo="cli">
+        <div class="demo-head">
+          <span class="demo-title">demo · terminal</span>
+          <button class="btn"><span class="lang lang-zh">运行任务</span><span class="lang lang-ja">タスク実行</span><span class="lang lang-en">Run task</span></button>
+        </div>
+        <div class="terminal">
+          <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>agent — zsh</span></div>
+          <div class="body"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. IDE -->
+    <section id="ide" class="section">
+      <span class="eyebrow">Mode 5 · IDE Integration</span>
+      <h2 class="section-title"><span class="lang lang-zh">IDE / 开发工具集成</span><span class="lang lang-ja">IDE / 開発ツール統合</span><span class="lang lang-en">IDE / Tooling Integration</span></h2>
+      <p class="lead"><span class="lang lang-zh">把 AI 嵌入编辑器：三个层级——① 行内补全（灰色幽灵文本，Tab 接受）；② 侧边对话；③ 编辑器内 agent（多文件改动）。</span><span class="lang lang-ja">AI をエディタに組込む：3 レベル——① インライン補完（ゴーストテキスト、Tab で採用）；② サイドチャット；③ エディタ内 agent（複数ファイル編集）。</span><span class="lang lang-en">AI inside the editor, at three levels: ① inline completion (ghost text, Tab to accept); ② side chat; ③ in-editor agent (multi-file edits).</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">写字时旁边自动浮现的「下一句建议」。</span><span class="lang lang-ja">書く傍から現れる「次の一文の提案」。</span><span class="lang lang-en">A "next-line suggestion" that appears as you type.</span></div>
+      <div class="demo" data-demo="ide">
+        <div class="demo-head">
+          <span class="demo-title">demo · inline completion</span>
+          <button class="btn">Tab ⏎ <span class="lang lang-zh">接受</span><span class="lang lang-ja">採用</span><span class="lang lang-en">accept</span></button>
+        </div>
+        <div class="editor"><span class="gutter"> 1 </span><span class="cm"># sum of squares</span>
+<span class="gutter"> 2 </span><span class="kw">def</span> <span class="fn">sum_sq</span>(nums):
+<span class="gutter"> 3 </span>    <span class="kw">return</span> <span class="ghost">sum(n * n for n in nums)</span></div>
+        <p class="muted ide-status" style="font-size:13px;margin-top:8px"></p>
+      </div>
+    </section>
+
+    <!-- 6. 新兴助手 -->
+    <section id="emerging" class="section">
+      <span class="eyebrow">Mode 6 · New Forms</span>
+      <h2 class="section-title"><span class="lang lang-zh">新兴形态：持久化 / 自改进个人助手</span><span class="lang lang-ja">新型：常駐 / 自己改善する個人アシスタント</span><span class="lang lang-en">New Forms: Persistent / Self-Improving Assistants</span></h2>
+      <p class="lead"><span class="lang lang-zh">2025–2026 出现的一类新应用：自托管、多通道（Slack/Discord/iMessage…）、长期记忆，甚至能「自己写技能」闭环自改进，自带钥匙（bring-your-own-key）。</span><span class="lang lang-ja">2025–2026 に登場した新類型：セルフホスト、マルチチャネル（Slack/Discord/iMessage…）、長期記憶、さらに「自分でスキルを書く」自己改善ループ、bring-your-own-key。</span><span class="lang lang-en">A new class from 2025–2026: self-hosted, multi-channel (Slack/Discord/iMessage…), long-term memory, even closed-loop self-improvement that writes its own skills — bring-your-own-key.</span></p>
+      <div class="analogy"><b>类比 / Analogy</b> · <span class="lang lang-zh">常驻的私人管家——记得你的偏好，越用越懂你。</span><span class="lang lang-ja">常駐の執事——好みを覚え、使うほど賢くなる。</span><span class="lang lang-en">A live-in butler — remembers your preferences, gets better the more you use it.</span></div>
+      <div class="cards cols-2">
+        <div class="card">
+          <h3>OpenClaw</h3>
+          <p class="muted"><span class="lang lang-zh">开源个人 AI 助手，自托管网关接入各种聊天应用，可自写技能、主动自动化、长期记忆。</span><span class="lang lang-ja">OSS の個人 AI アシスタント。セルフホストのゲートウェイで各種チャットに接続、スキル自作・能動的自動化・長期記憶。</span><span class="lang lang-en">Open-source personal AI assistant; self-hosted gateway into chat apps, writes its own skills, proactive automation, long-term memory.</span></p>
+        </div>
+        <div class="card">
+          <h3>Hermes Agent</h3>
+          <p class="muted"><span class="lang lang-zh">Nous Research 的自托管持久 agent，闭环学习（完成任务后写成可复用技能），接 200+ 模型。偏会话助手，非编码优先。</span><span class="lang lang-ja">Nous Research の常駐 agent。閉ループ学習（タスク後に再利用スキル化）、200+ モデル接続。会話寄りでコーディング特化ではない。</span><span class="lang lang-en">Nous Research's persistent agent; closed learning loop (writes reusable skills after tasks), 200+ models. Conversational-first, not coding-first.</span></p>
+        </div>
+      </div>
+      <p class="muted" style="font-size:13px"><span class="lang lang-zh">更广的新形态：多模型编排平台、声明式多 agent、agent 编队。</span><span class="lang lang-ja">より広い新形態：マルチモデル編成プラットフォーム、宣言的マルチ agent、agent 編隊。</span><span class="lang lang-en">Wider new forms: multi-model orchestration platforms, declarative multi-agent, agent fleets.</span></p>
+    </section>
+
+    <!-- 对比与选择 -->
+    <section id="compare" class="section">
+      <span class="eyebrow">Compare &amp; Choose</span>
+      <h2 class="section-title"><span class="lang lang-zh">六形态对比 &amp; 如何选用</span><span class="lang lang-ja">6 形態の比較 &amp; 使い分け</span><span class="lang lang-en">Six Modes Compared &amp; How to Choose</span></h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th><span class="lang lang-zh">形态</span><span class="lang lang-ja">形態</span><span class="lang lang-en">Mode</span></th>
+            <th><span class="lang lang-zh">控制力</span><span class="lang lang-ja">制御性</span><span class="lang lang-en">Control</span></th>
+            <th><span class="lang lang-zh">自动化</span><span class="lang lang-ja">自動化</span><span class="lang lang-en">Autonomy</span></th>
+            <th><span class="lang lang-zh">上手</span><span class="lang lang-ja">学習コスト</span><span class="lang lang-en">Onboarding</span></th>
+            <th><span class="lang lang-zh">持久性</span><span class="lang lang-ja">永続性</span><span class="lang lang-en">Persistence</span></th>
+            <th><span class="lang lang-zh">适用</span><span class="lang lang-ja">用途</span><span class="lang lang-en">Best for</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td>Chat</td><td><span class="pill good">高</span></td><td><span class="pill">低</span></td><td><span class="pill good">易</span></td><td><span class="pill">低</span></td><td><span class="lang lang-zh">问答 / 起草</span><span class="lang lang-ja">Q&amp;A / 下書き</span><span class="lang lang-en">Q&amp;A / drafting</span></td></tr>
+            <tr><td>API</td><td><span class="pill good">高</span></td><td><span class="pill warn">中</span></td><td><span class="pill warn">中</span></td><td><span class="pill">低</span></td><td><span class="lang lang-zh">集成 / 批量</span><span class="lang lang-ja">統合 / バッチ</span><span class="lang lang-en">integration / batch</span></td></tr>
+            <tr><td>Agent</td><td><span class="pill warn">中</span></td><td><span class="pill good">高</span></td><td><span class="pill danger">较难</span></td><td><span class="pill warn">中</span></td><td><span class="lang lang-zh">多步任务</span><span class="lang lang-ja">多段タスク</span><span class="lang lang-en">multi-step tasks</span></td></tr>
+            <tr><td>CLI</td><td><span class="pill warn">中</span></td><td><span class="pill good">高</span></td><td><span class="pill warn">中</span></td><td><span class="pill">低</span></td><td><span class="lang lang-zh">编码 / CI</span><span class="lang lang-ja">コーディング / CI</span><span class="lang lang-en">coding / CI</span></td></tr>
+            <tr><td>IDE</td><td><span class="pill good">高</span></td><td><span class="pill warn">中</span></td><td><span class="pill good">易</span></td><td><span class="pill">低</span></td><td><span class="lang lang-zh">日常编码</span><span class="lang lang-ja">日常コーディング</span><span class="lang lang-en">everyday coding</span></td></tr>
+            <tr><td><span class="lang lang-zh">持久助手</span><span class="lang lang-ja">常駐</span><span class="lang lang-en">Persistent</span></td><td><span class="pill">低</span></td><td><span class="pill good">高</span></td><td><span class="pill danger">较难</span></td><td><span class="pill good">高</span></td><td><span class="lang lang-zh">个人自动化</span><span class="lang lang-ja">個人自動化</span><span class="lang lang-en">personal automation</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mermaid">
+flowchart TD
+    Q{"Need automation?"}:::q
+    Q -- "No, just ask" --> Chat["Web Chat"]:::a
+    Q -- "Yes" --> P{"Programmatic /<br/>embedded?"}:::q
+    P -- "In my code" --> API["API + built-in tools"]:::a
+    P -- "In my editor" --> IDE["IDE integration"]:::a
+    P -- "Multi-step task" --> AG{"Where?"}:::q
+    AG -- "Terminal / CI" --> CLI["CLI agent"]:::a
+    AG -- "Custom flow" --> AGENT["Agent SDK"]:::a
+    P -- "Always-on, personal" --> PER["Persistent assistant"]:::a
+    classDef q stroke:#b07bff,stroke-width:2px;
+    classDef a stroke:#5b8cff,stroke-width:2px;
+      </div>
+    </section>
+
+    <!-- 前沿与最佳实践 -->
+    <section id="frontier" class="section">
+      <span class="eyebrow">Frontier &amp; Best Practices</span>
+      <h2 class="section-title"><span class="lang lang-zh">前沿与最佳实践</span><span class="lang lang-ja">最前線とベストプラクティス</span><span class="lang lang-en">Frontier &amp; Best Practices</span></h2>
+      <div class="cards cols-2">
+        <div class="card">
+          <h3><span class="lang lang-zh">检索 / Agentic Search</span><span class="lang lang-ja">検索 / Agentic Search</span><span class="lang lang-en">Retrieval / Agentic Search</span></h3>
+          <p class="muted"><span class="lang lang-zh">标准 RAG → 模块化 RAG（查询改写 + 混合检索 + 重排 reranking）→ <b>Agentic Search / Agentic Retrieval</b>（agent 做查询规划、拆解子查询、并行检索、按需迭代）→ GraphRAG → Contextual Retrieval。</span><span class="lang lang-ja">標準 RAG → モジュラー RAG（クエリ書換 + ハイブリッド検索 + リランキング）→ <b>Agentic Search / Agentic Retrieval</b>（agent がクエリ計画・サブクエリ分解・並列検索・反復）→ GraphRAG → Contextual Retrieval。</span><span class="lang lang-en">Standard RAG → Modular RAG (query rewriting + hybrid search + reranking) → <b>Agentic Search / Agentic Retrieval</b> (the agent plans queries, decomposes sub-queries, searches in parallel, iterates on demand) → GraphRAG → Contextual Retrieval.</span></p>
+        </div>
+        <div class="card">
+          <h3><span class="lang lang-zh">记忆与召回</span><span class="lang lang-ja">記憶と想起</span><span class="lang lang-en">Memory &amp; Recall</span></h3>
+          <p class="muted"><span class="lang lang-zh">三层：短期（对话上下文）/ 长期（知识）/ 工作状态（事务）。召回<b>不止向量库</b>——向量(ANN) + 全文检索(FTS5/BM25) + 倒排索引 + 知识图谱/GraphDB(多跳) + LLM 生成的 wiki/摘要。2026 主流是<b>混合检索</b>（向量广度 + 图深度）。</span><span class="lang lang-ja">3 層：短期（対話文脈）/ 長期（知識）/ 作業状態（トランザクション）。想起は<b>ベクトル DB だけではない</b>——ベクトル(ANN) + 全文検索(FTS5/BM25) + 転置インデックス + 知識グラフ/GraphDB(マルチホップ) + LLM 生成 wiki/要約。2026 の主流は<b>ハイブリッド検索</b>。</span><span class="lang lang-en">Three layers: short-term (conversation) / long-term (knowledge) / working state (transactional). Recall is <b>more than a vector DB</b> — vectors (ANN) + full-text search (FTS5/BM25) + inverted index + knowledge graph/GraphDB (multi-hop) + LLM-generated wiki/summaries. The 2026 norm is <b>hybrid retrieval</b> (vector breadth + graph depth).</span></p>
+        </div>
+        <div class="card">
+          <h3><span class="lang lang-zh">模型路由</span><span class="lang lang-ja">モデルルーティング</span><span class="lang lang-en">Model routing</span></h3>
+          <p class="muted"><span class="lang lang-zh">按任务选模型，别让一个模型干所有；多模态（视频/语音/文本）；端侧小模型处理有界任务。</span><span class="lang lang-ja">タスク別にモデルを選ぶ。多モーダル（動画/音声/テキスト）、端末側の小型モデルで有界タスク。</span><span class="lang lang-en">Route by task — don't make one model do everything; multimodal (video/voice/text); small on-device models for bounded jobs.</span></p>
+        </div>
+        <div class="card">
+          <h3><span class="lang lang-zh">治理提醒</span><span class="lang lang-ja">ガバナンス</span><span class="lang lang-en">Governance</span></h3>
+          <p class="muted"><span class="lang lang-zh">Gartner 警告：别把「改了名的 chatbot」当成真正的 agentic AI——可审计、可观测是底线。</span><span class="lang lang-ja">Gartner の警告：「名前を変えた chatbot」を agentic AI と誤認しない——監査可能性・可観測性が前提。</span><span class="lang lang-en">Gartner warns: don't mistake a rebranded chatbot for true agentic AI — auditability and observability are the baseline.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer"><p data-i18n="footer">教学演讲材料 · 静态站点 · 内容核实于 2026-05，带版本号/数字的条目请以最新官方信息为准。</p></footer>
+  </main>
+</div>
+
+<div class="present-hint"><span data-i18n="present.hint">方向键 / 空格 翻屏 · Esc 退出</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  if (!window.mermaid) return;
+  var blocks = [].slice.call(document.querySelectorAll(".mermaid"));
+  blocks.forEach(function (b) { b.dataset.src = b.textContent; });
+  function render() {
+    var light = document.documentElement.getAttribute("data-theme") === "light";
+    mermaid.initialize({ startOnLoad: false, theme: light ? "default" : "dark",
+      themeVariables: { fontFamily: "inherit", fontSize: "14px" }, flowchart: { curve: "basis" } });
+    blocks.forEach(function (b) { b.removeAttribute("data-processed"); b.innerHTML = b.dataset.src; });
+    try { mermaid.run({ nodes: blocks }); } catch (e) { try { mermaid.init(undefined, blocks); } catch (e2) {} }
+  }
+  render();
+  document.addEventListener("themechange", render);
+})();
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/demos.js"></script>
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

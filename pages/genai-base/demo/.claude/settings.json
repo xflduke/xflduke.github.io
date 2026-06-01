@@ -1,0 +1,62 @@
+{
+  "model": "claude-opus-4-8",
+  "env": {
+    "OPSM_ENV": "onprem",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(ruff:*)",
+      "Bash(mypy:*)",
+      "Bash(pytest:*)",
+      "Bash(python:*)",
+      "Bash(uv:*)",
+      "Bash(docker compose:*)"
+    ],
+    "deny": [
+      "WebFetch",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(pip install:*)",
+      "Read(./.env)",
+      "Read(./**/.env)"
+    ],
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(docker:*)",
+      "Bash(git push:*)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/statusline.sh"
+  },
+  "outputStyle": "onprem-review",
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [{ "type": "command", "command": "bash .claude/hooks/notify.sh session-start" }] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command", "command": "bash .claude/hooks/secret-scan.sh prompt" }] }
+    ],
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "bash .claude/hooks/no-external-net.sh" }] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Edit|Write|MultiEdit", "hooks": [{ "type": "command", "command": "bash .claude/hooks/format.sh" }] },
+      { "matcher": "Edit|Write|MultiEdit", "hooks": [{ "type": "command", "command": "bash .claude/hooks/secret-scan.sh files" }] }
+    ],
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "bash .claude/hooks/run-tests.sh" }] }
+    ],
+    "SubagentStop": [
+      { "hooks": [{ "type": "command", "command": "bash .claude/hooks/notify.sh subagent-done" }] }
+    ],
+    "Notification": [
+      { "hooks": [{ "type": "command", "command": "bash .claude/hooks/notify.sh attention" }] }
+    ],
+    "PreCompact": [
+      { "hooks": [{ "type": "command", "command": "bash .claude/hooks/notify.sh pre-compact" }] }
+    ]
+  }
+}

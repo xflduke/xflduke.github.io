@@ -1,0 +1,2 @@
+openai>=1.0
+truststore>=0.9   ; needed behind a TLS-intercepting corporate proxy (uses the OS trust store)
